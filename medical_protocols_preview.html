@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Global Styles & Branding */
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Share+Tech+Mono&display=swap');
+    
+    .font-heavy { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
+    .font-tech { font-family: 'Share Tech Mono', monospace; }
+    
+    .bg-grunge {
+      background-color: #050605;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(30, 40, 30, 0.3) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.4) 2px, rgba(0,0,0,0.4) 4px);
+      color: #9ca3af;
+    }
+    
+    .text-neon-green { color: #76ff03; text-shadow: 0 0 10px rgba(118, 255, 3, 0.5); }
+    .text-gold { color: #ffb700; text-shadow: 0 0 10px rgba(255, 183, 0, 0.4); }
+
+    .diamond-icon {
+      width: 14px; height: 14px; background-color: #f97316;
+      transform: rotate(45deg); display: inline-block;
+      box-shadow: 0 0 10px #f97316;
+    }
+
+    .panel-armor {
+      background: linear-gradient(135deg, rgba(22, 24, 22, 0.85) 0%, rgba(10, 11, 10, 0.95) 100%);
+      border: 2px solid #232a23;
+      clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+      position: relative;
+    }
+    
+    .btn-heavy {
+      clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+      font-family: 'Oswald', sans-serif; text-transform: uppercase;
+    }
+
+    /* Form Controls */
+    input[type=text] {
+      background: #0a0b0a; border: 1px solid #232a23; color: #f97316; font-family: 'Share Tech Mono', monospace;
+      padding: 0.75rem 1rem; outline: none; transition: border-color 0.2s;
+      appearance: none;
+    }
+    input[type=text]:focus { border-color: #f97316; box-shadow: 0 0 10px rgba(249, 115, 22, 0.2); }
+
+    .nav-btn {
+      text-align: left; padding: 0.75rem 1rem; font-family: 'Share Tech Mono', monospace;
+      font-size: 0.875rem; color: #9ca3af; border-left: 2px solid transparent; transition: all 0.2s;
+      background: transparent; width: 100%; display: block;
+    }
+    .nav-btn:hover { background: rgba(249, 115, 22, 0.05); color: #d1d5db; border-left-color: #f97316; }
+    .nav-btn.active { background: rgba(249, 115, 22, 0.1); color: #f97316; border-left-color: #f97316; font-weight: bold; }
+
+    /* Custom Scrollbar for Sidebar */
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #050605; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #232a23; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #f97316; }
+
+    svg.lucide { stroke-width: 2; fill: none; stroke: currentColor; }
+  </style>
+</head>
+<body class="bg-grunge text-gray-300 font-tech p-0 md:p-6 lg:p-8 min-h-screen flex flex-col h-screen">
+
+  <!-- Header -->
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-center p-4 md:p-0 md:pb-4 border-b-2 border-[#232a23] shrink-0 bg-[#050605] md:bg-transparent z-30">
+    <div>
+      <div class="flex items-center gap-3 mb-1">
+        <div class="diamond-icon"></div>
+        <h1 class="text-3xl md:text-4xl font-heavy text-orange-500 tracking-widest drop-shadow-[0_0_8px_rgba(249,115,22,0.6)]">MEDICAL PROTOCOLS</h1>
+      </div>
+      <p class="text-xs md:text-sm text-gray-400 mt-1 hidden sm:block">Emergency Medical Checklist & Procedural Triage</p>
+    </div>
+    <div class="mt-4 md:mt-0 flex gap-3 w-full md:w-auto">
+       <button id="mobile-menu-btn" class="md:hidden btn-heavy bg-[#232a23] text-gray-300 px-4 py-2 border border-[#4a544a] flex-1 flex justify-center items-center gap-2" onclick="toggleMobileNav()">
+          <svg class="lucide w-4 h-4" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg> SCENARIOS
+       </button>
+       <button class="btn-heavy bg-[#232a23] text-gray-300 px-6 py-2 border border-[#4a544a] hover:bg-[#333e33] transition-colors flex-1 md:flex-none" onclick="window.location.href='index.html'">
+          RETURN TO DASHBOARD
+       </button>
+    </div>
+  </header>
+
+  <main class="flex-1 flex overflow-hidden mt-0 md:mt-6 relative">
+     
+     <!-- Sidebar (Left Pane) -->
+     <aside id="sidebar-nav" class="absolute md:relative z-20 w-full md:w-80 h-full bg-[#0a0b0a] md:bg-transparent border-r border-[#232a23] flex flex-col transition-transform duration-300 -translate-x-full md:translate-x-0">
+        
+        <div class="p-4 shrink-0 bg-[#0a0b0a] sticky top-0 border-b border-[#232a23]">
+           <div class="relative w-full">
+              <svg class="lucide w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input type="text" id="search-scenarios" placeholder="Quick Search..." onkeyup="filterSidebar()" class="w-full pl-9 text-sm" />
+           </div>
+        </div>
+
+        <div id="nav-list" class="flex-1 overflow-y-auto custom-scroll pb-20 md:pb-4">
+           
+           <!-- Category 1 -->
+           <h3 class="px-4 pt-6 pb-2 text-[10px] font-heavy text-gray-500 uppercase tracking-widest border-b border-[#1a201a] sticky top-0 bg-[#0a0b0a]/90 backdrop-blur-sm z-10">
+             DEEP SPACE & MICROGRAVITY ANOMALIES
+           </h3>
+           <div class="scenario-group">
+             <button class="nav-btn scenario-item active" onclick="loadProtocol('ammonia', this)">1. Toxic Ammonia Leak Exposure</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('depress', this)">2. Spacesuit Depressurization (Hypoxia)</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('sas', this)">3. Severe Intractable Space Adaptation Syndrome</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('generic', this)">4. Microgravity-Induced Urinary Retention</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('generic', this)">5. Spaceflight Assoc. Neuro-ocular Syndrome (SANS)</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('generic', this)">6. Acute Solar Flare Radiation Sickness</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('generic', this)">7. Lunar/Martian Regolith Inhalation</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('generic', this)">8. Splinting Traumatic Fractures in Zero-G</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('generic', this)">9. Toxic Atmospheric Off-gassing / Smoke</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('generic', this)">10. High-G Launch/Re-entry Arrhythmia</button>
+           </div>
+
+           <!-- Category 2 -->
+           <h3 class="px-4 pt-6 pb-2 text-[10px] font-heavy text-gray-500 uppercase tracking-widest border-b border-[#1a201a] sticky top-0 bg-[#0a0b0a]/90 backdrop-blur-sm z-10 mt-4">
+             STANDARD MEDICAL EMERGENCIES
+           </h3>
+           <div class="scenario-group">
+             <button class="nav-btn scenario-item" onclick="loadProtocol('cpr', this)">11. Sudden Cardiac Arrest (Zero-G CPR)</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('generic', this)">12. Choking & Airway Obstruction</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('generic', this)">13. Deep Laceration & Hemorrhage Control</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('generic', this)">14. Acute Dental Infection / Extraction</button>
+             <button class="nav-btn scenario-item" onclick="loadProtocol('generic', this)">15. Anaphylaxis (Severe Allergic Reaction)</button>
+           </div>
+        </div>
+     </aside>
+
+     <!-- Main Content Area (Right Pane) -->
+     <div class="flex-1 p-4 md:p-8 overflow-y-auto custom-scroll relative bg-[#050605] md:bg-transparent">
+        
+        <!-- Emergency Override Floating Action -->
+        <button onclick="emergencyOverride(this)" class="fixed bottom-6 right-6 z-40 px-6 py-4 btn-heavy bg-[#ff3333] hover:bg-red-500 text-white font-heavy text-sm md:text-base tracking-widest transition-colors shadow-[0_0_20px_rgba(255,51,51,0.5)] flex items-center gap-3">
+           <svg class="lucide w-6 h-6 animate-pulse" viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 7 12 2 7 7"/><path d="m17 17-5 5-5-5"/></svg>
+           <span class="hidden sm:inline">INITIATE EMERGENCY COMMS</span>
+           <span class="sm:hidden">EMERGENCY COMMS</span>
+        </button>
+
+        <div id="tutorial-container" class="max-w-4xl pb-24">
+           <!-- Dynamic Content Injected Here -->
+        </div>
+
+     </div>
+  </main>
+
+  <script>
+    const protocols = {
+      'ammonia': {
+        title: "TOXIC AMMONIA LEAK EXPOSURE",
+        threat: "CRITICAL",
+        threatColor: "text-red-500 border-red-500 bg-red-950/30 shadow-[0_0_10px_red]",
+        equipment: ["O2 Delivery System (Mask/Tank)", "Decontamination Wipes", "Ophthalmic Irrigation Kit", "Emergency Syringe Kit (Atropine standby)"],
+        warning: "Ammonia is highly toxic and causes severe respiratory and ocular damage. DO NOT attempt to flush eyes with limited fluid in zero-G without using the sealed ophthalmic irrigation goggles to prevent contaminated water spheres from floating in the cabin.",
+        steps: [
+          "DON OXYGEN MASKS: Immediately don emergency oxygen masks for patient and all assisting crew. Switch to isolated loop.",
+          "ISOLATE AND VENT: Command automated systems to isolate the compromised module. If patient is covered in liquid ammonia, isolate patient in the airlock for decontamination.",
+          "OCULAR IRRIGATION: If eyes are exposed, strap patient to the Crew Medical Restraint System (CMRS). Affix irrigation goggles tightly and run 1L of saline through the system.",
+          "RESPIRATORY ASSESSMENT: Monitor SpO2. If airway edema (swelling) begins to obstruct breathing, prepare for emergency cricothyrotomy (zero-G intubation is extremely difficult).",
+          "DERMAL DECONTAMINATION: Wipe exposed skin with dry decontamination pads. DO NOT use loose water, as the exothermic reaction with ammonia can cause thermal burns."
+        ]
+      },
+      'depress': {
+        title: "SPACESUIT DEPRESSURIZATION (EBULLISM / HYPOXIA)",
+        threat: "CRITICAL",
+        threatColor: "text-red-500 border-red-500 bg-red-950/30 shadow-[0_0_10px_red]",
+        equipment: ["Secondary Oxygen Pack (SOP)", "Hyperbaric Chamber (if available)", "IV Fluids", "Thermal Blankets"],
+        warning: "Ebullism (blood/fluids boiling at body temperature in a vacuum) can occur within 60 seconds of severe depressurization. Do not immediately administer high-flow IV fluids until ambient pressure is restored, to avoid further rapid vaporization.",
+        steps: [
+          "ABORT EVA: Immediately engage Secondary Oxygen Pack (SOP) and initiate emergency return to the airlock.",
+          "REPRESSURIZE: Execute emergency rapid repressurization of the airlock. (Warning: This will cause severe barotrauma to the ears, but is necessary for survival).",
+          "ASSESS CONSCIOUSNESS: Once inside, remove helmet. If patient is unconscious, check for spontaneous respiration.",
+          "TREAT EBULLISM AND HYPOXIA: Administer 100% O2 via mask. Apply thermal blankets (patient will be severely hypothermic due to evaporative cooling).",
+          "MONITOR NEUROLOGICAL STATUS: Monitor for decompression sickness (the 'Bends'). If neurological symptoms develop, initiate hyperbaric protocol in the suit or designated chamber."
+        ]
+      },
+      'cpr': {
+        title: "SUDDEN CARDIAC ARREST (ZERO-G CPR)",
+        threat: "CRITICAL",
+        threatColor: "text-red-500 border-red-500 bg-red-950/30 shadow-[0_0_10px_red]",
+        equipment: ["Crew Medical Restraint System (CMRS)", "Automated External Defibrillator (AED)", "Advanced Life Support Pack"],
+        warning: "CPR in microgravity is physically demanding and mechanically difficult due to Newton's Third Law. Compressions will push you away from the patient unless both of you are rigidly secured.",
+        steps: [
+          "RESTRAIN PATIENT: Immediately strap the patient to the Crew Medical Restraint System (CMRS) board. Secure the board to the module deck or wall.",
+          "BRACE YOURSELF: The rescuer must strap themselves to the CMRS directly above the patient, or brace their feet securely in floor loops to generate downward force.",
+          "INITIATE COMPRESSIONS: Begin chest compressions at 100-120 bpm. Use the 'Evetts-Russomano' method (wrap legs around patient's torso for leverage if straps are unavailable).",
+          "APPLY AED: Power on the AED and apply pads. The AED will analyze the rhythm. Ensure NO CREW MEMBER is touching the patient or the CMRS board during shock delivery.",
+          "MANAGE AIRWAY: If a second rescuer is available, manage airway with a bag-valve-mask (BVM) attached to the module's 100% O2 supply."
+        ]
+      },
+      'generic': {
+        title: "PROTOCOL ARCHIVE DATA STREAMING...",
+        threat: "PENDING",
+        threatColor: "text-gray-500 border-gray-500 bg-black/50 shadow-none",
+        equipment: ["Awaiting telemetry connection to deep space database."],
+        warning: "This scenario is currently being downloaded from Houston. Await transmission.",
+        steps: [
+          "Establish link with Mission Control.",
+          "Verify checksum of incoming medical protocols.",
+          "Standby for detailed procedural checklist."
+        ]
+      }
+    };
+
+    function generateTutorialHTML(data) {
+      const equipHtml = data.equipment.map(item => `<li class="flex items-center gap-2 text-sm text-gray-300 before:content-[''] before:w-1.5 before:h-1.5 before:bg-orange-500 before:rounded-full">${item}</li>`).join('');
+      
+      const stepsHtml = data.steps.map((step, idx) => `
+        <div class="flex gap-4 p-4 bg-[#0a0b0a] border border-[#232a23] relative overflow-hidden group hover:border-orange-500/50 transition-colors">
+           <div class="font-heavy text-3xl text-gray-700 select-none w-8 shrink-0">${idx + 1}</div>
+           <p class="text-sm font-tech text-gray-300 leading-relaxed pt-1 relative z-10">${step}</p>
+        </div>
+      `).join('');
+
+      return `
+        <div class="panel-armor p-6 md:p-8 mb-8">
+           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#232a23] pb-6 mb-6">
+              <h2 class="text-2xl md:text-3xl font-heavy text-gray-200 tracking-wider">${data.title}</h2>
+              <div class="px-4 py-1.5 border font-heavy text-sm tracking-widest flex items-center gap-2 ${data.threatColor}">
+                 <div class="w-2 h-2 rounded-full ${data.threat === 'CRITICAL' ? 'bg-red-500 animate-pulse' : 'bg-gray-500'}"></div>
+                 THREAT: ${data.threat}
+              </div>
+           </div>
+
+           <div class="mb-8">
+              <h3 class="text-[10px] font-heavy text-gray-500 uppercase tracking-widest mb-3">Required CHeCS Sub-Packs & Equipment</h3>
+              <ul class="space-y-2 pl-2">
+                 ${equipHtml}
+              </ul>
+           </div>
+
+           <div class="p-5 border-l-4 border-gold bg-yellow-950/30 mb-8 flex items-start gap-4">
+              <svg class="lucide w-6 h-6 text-gold shrink-0 mt-0.5" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              <div>
+                 <strong class="block text-gold font-heavy tracking-widest text-sm mb-1">MICROGRAVITY CONTRAINDICATION / WARNING</strong>
+                 <p class="text-sm font-tech text-gray-300 leading-relaxed">${data.warning}</p>
+              </div>
+           </div>
+
+           <div>
+              <h3 class="text-[10px] font-heavy text-gray-500 uppercase tracking-widest mb-4">Procedural Execution Checklist</h3>
+              <div class="space-y-3">
+                 ${stepsHtml}
+              </div>
+           </div>
+        </div>
+      `;
+    }
+
+    function loadProtocol(key, btnElement) {
+      // Update Active State in Sidebar
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      if(btnElement) btnElement.classList.add('active');
+
+      // Hide mobile menu if open
+      const sidebar = document.getElementById('sidebar-nav');
+      if (!sidebar.classList.contains('-translate-x-full')) {
+         sidebar.classList.add('-translate-x-full');
+      }
+
+      // Render Content
+      const data = protocols[key] || protocols['generic'];
+      const container = document.getElementById('tutorial-container');
+      
+      // Simple fade effect
+      container.style.opacity = 0;
+      setTimeout(() => {
+        container.innerHTML = generateTutorialHTML(data);
+        container.style.opacity = 1;
+        container.style.transition = 'opacity 0.3s ease-in-out';
+      }, 150);
+    }
+
+    function filterSidebar() {
+      const q = document.getElementById('search-scenarios').value.toLowerCase();
+      const items = document.querySelectorAll('.scenario-item');
+      items.forEach(item => {
+        if(item.innerText.toLowerCase().includes(q)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    function toggleMobileNav() {
+      const sidebar = document.getElementById('sidebar-nav');
+      sidebar.classList.toggle('-translate-x-full');
+    }
+
+    function emergencyOverride(btn) {
+      const origHtml = btn.innerHTML;
+      btn.innerHTML = `
+        <svg class="animate-spin w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+        <span class="hidden sm:inline">ESTABLISHING DSN UPLINK...</span>
+        <span class="sm:hidden">UPLINKING...</span>
+      `;
+      btn.classList.add('bg-black', 'border', 'border-red-500', 'text-red-500', 'pointer-events-none');
+      btn.classList.remove('bg-[#ff3333]', 'hover:bg-red-500', 'text-white');
+      
+      setTimeout(() => {
+        btn.innerHTML = `
+          <svg class="lucide w-6 h-6 text-neon-green" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+          <span class="hidden sm:inline text-neon-green">HOUSTON SURGEON CONNECTED</span>
+          <span class="sm:hidden text-neon-green">CONNECTED</span>
+        `;
+        btn.classList.add('border-neon-green', 'shadow-[0_0_20px_rgba(118,255,3,0.5)]');
+        btn.classList.remove('border-red-500', 'shadow-[0_0_20px_rgba(255,51,51,0.5)]');
+      }, 3000);
+    }
+
+    // Init first protocol
+    loadProtocol('ammonia', document.querySelector('.scenario-item'));
+  </script>
+</body>
+</html>

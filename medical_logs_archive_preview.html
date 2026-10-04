@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Global Styles & Branding */
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Share+Tech+Mono&display=swap');
+    
+    .font-heavy { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
+    .font-tech { font-family: 'Share Tech Mono', monospace; }
+    
+    .bg-grunge {
+      background-color: #050605;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(30, 40, 30, 0.3) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.4) 2px, rgba(0,0,0,0.4) 4px);
+      color: #9ca3af;
+    }
+    
+    .text-neon-green { color: #76ff03; text-shadow: 0 0 10px rgba(118, 255, 3, 0.5); }
+    .text-gold { color: #ffb700; text-shadow: 0 0 10px rgba(255, 183, 0, 0.4); }
+
+    .diamond-icon {
+      width: 14px; height: 14px; background-color: #a855f7;
+      transform: rotate(45deg); display: inline-block;
+      box-shadow: 0 0 10px #a855f7;
+    }
+
+    .panel-armor {
+      background: linear-gradient(135deg, rgba(22, 24, 22, 0.85) 0%, rgba(10, 11, 10, 0.95) 100%);
+      border: 2px solid #232a23;
+      clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+      position: relative;
+    }
+    
+    .btn-heavy {
+      clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+      font-family: 'Oswald', sans-serif; text-transform: uppercase;
+    }
+
+    /* Form Controls */
+    input[type=text], select {
+      background: #0a0b0a; border: 1px solid #232a23; color: #a855f7; font-family: 'Share Tech Mono', monospace;
+      padding: 0.75rem 1rem; outline: none; transition: border-color 0.2s;
+      appearance: none;
+    }
+    input[type=text]:focus, select:focus { border-color: #a855f7; box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); }
+    
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a855f7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem;
+    }
+
+    /* Table Styles */
+    th { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; font-weight: normal; }
+    td { border-bottom: 1px solid #1a201a; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background-color: rgba(168, 85, 247, 0.05); }
+
+    svg.lucide { stroke-width: 2; fill: none; stroke: currentColor; }
+  </style>
+</head>
+<body class="bg-grunge text-gray-300 font-tech p-4 md:p-6 lg:p-8 min-h-screen">
+
+  <!-- Header -->
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b-2 border-[#232a23] mb-8">
+    <div>
+      <div class="flex items-center gap-3 mb-1">
+        <div class="diamond-icon"></div>
+        <h1 class="text-4xl font-heavy text-purple-500 tracking-widest drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]">MEDICAL LOGS ARCHIVE</h1>
+      </div>
+      <p class="text-sm text-gray-400 mt-1">Electronic Medical Record (EMR) & Historical Telemetry Database</p>
+    </div>
+    <div class="mt-4 md:mt-0 flex gap-3">
+       <button id="btn-export" onclick="exportLog()" class="btn-heavy bg-purple-600 text-white px-6 py-2 border border-purple-400 hover:bg-purple-500 transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+          <svg class="lucide w-4 h-4" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          TRANSMIT TO DSN
+       </button>
+       <button class="btn-heavy bg-[#232a23] text-gray-300 px-6 py-2 border border-[#4a544a] hover:bg-[#333e33] transition-colors" onclick="window.location.href='index.html'">
+          RETURN TO DASHBOARD
+       </button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto space-y-8">
+     
+     <!-- 1. Global Search & Filter Module -->
+     <section class="panel-armor p-4 md:p-6 flex flex-col md:flex-row gap-4 relative z-20">
+        <div class="relative flex-1">
+           <svg class="lucide w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+           <input type="text" id="search-input" placeholder="Search by Crew Member or ID..." onkeyup="filterLogs()" class="w-full pl-10" />
+        </div>
+        <div class="grid grid-cols-2 md:flex gap-4">
+           <select class="w-full md:w-auto" onchange="filterLogs()">
+              <option>Last 24 Hours</option>
+              <option>Mission Week 14</option>
+              <option>All Time</option>
+           </select>
+           <select id="filter-category" class="w-full md:w-auto" onchange="filterLogs()">
+              <option value="all">Category: All</option>
+              <option value="vitals">Vitals</option>
+              <option value="bhp">BHP/Psychology</option>
+              <option value="medication">Medication</option>
+           </select>
+           <select id="filter-status" class="col-span-2 md:col-span-1 w-full md:w-auto" onchange="filterLogs()">
+              <option value="all">Status: All</option>
+              <option value="nominal">Nominal</option>
+              <option value="anomaly">Anomaly</option>
+              <option value="critical">Critical</option>
+           </select>
+        </div>
+     </section>
+
+     <!-- 2. Trend Analysis Visualization (Placeholder) -->
+     <section class="panel-armor p-6 md:p-8">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+           <h2 class="text-xl font-heavy text-gray-200 tracking-wider flex items-center gap-2">
+             <svg class="lucide w-5 h-5 text-purple-500" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+             CREW HEALTH TRENDS - MISSION DAY 142
+           </h2>
+           <div class="flex gap-2 mt-4 sm:mt-0 text-xs font-tech text-gray-400">
+             <span class="flex items-center gap-1"><div class="w-2 h-2 bg-purple-500 rounded-full"></div> Sleep Duration (Avg)</span>
+             <span class="flex items-center gap-1 ml-4"><div class="w-2 h-2 bg-neon-green rounded-full"></div> Radiation (mSv)</span>
+           </div>
+        </div>
+        
+        <!-- Mock Graph Area -->
+        <div class="w-full h-48 md:h-64 border border-[#232a23] bg-black/60 relative p-4 flex items-end">
+           <!-- Grid Lines -->
+           <div class="absolute inset-0 flex flex-col justify-between pointer-events-none p-4">
+             <div class="border-t border-[#1a201a] w-full"></div>
+             <div class="border-t border-[#1a201a] w-full"></div>
+             <div class="border-t border-[#1a201a] w-full"></div>
+             <div class="border-t border-[#1a201a] w-full"></div>
+             <div class="border-t border-[#1a201a] w-full"></div>
+           </div>
+           
+           <!-- SVG Mock Line Chart -->
+           <svg class="w-full h-full absolute inset-0 preserve-aspect-ratio-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+             <!-- Radiation Line (Green, stable) -->
+             <polyline points="0,90 20,85 40,88 60,82 80,80 100,75" fill="none" stroke="#76ff03" stroke-width="1.5" stroke-dasharray="2,2" class="opacity-50" />
+             
+             <!-- Sleep Trend Line (Purple, declining) -->
+             <linearGradient id="purpleGlow" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(168,85,247,0.4)" />
+                <stop offset="100%" stop-color="rgba(168,85,247,0)" />
+             </linearGradient>
+             <polygon points="0,100 0,20 20,30 40,25 60,50 80,45 100,70 100,100" fill="url(#purpleGlow)" />
+             <polyline points="0,20 20,30 40,25 60,50 80,45 100,70" fill="none" stroke="#a855f7" stroke-width="2" class="drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]" />
+             
+             <!-- Data Nodes -->
+             <circle cx="60" cy="50" r="1.5" fill="#a855f7" class="animate-pulse" />
+             <circle cx="100" cy="70" r="1.5" fill="#a855f7" class="animate-pulse" />
+           </svg>
+        </div>
+     </section>
+
+     <!-- 3. EMR Telemetry Data Table -->
+     <section class="panel-armor p-0 overflow-hidden">
+        
+        <!-- Desktop Table View -->
+        <div class="hidden md:block w-full overflow-x-auto">
+          <table class="w-full text-left whitespace-nowrap">
+            <thead class="bg-black/50 border-b border-[#232a23]">
+              <tr>
+                <th class="px-6 py-4 text-xs tracking-widest">Timestamp</th>
+                <th class="px-6 py-4 text-xs tracking-widest">Crew Member</th>
+                <th class="px-6 py-4 text-xs tracking-widest">Category</th>
+                <th class="px-6 py-4 text-xs tracking-widest w-full">Description</th>
+                <th class="px-6 py-4 text-xs tracking-widest text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody id="desktop-tbody" class="divide-y divide-[#1a201a] text-sm">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Stacked Card View -->
+        <div id="mobile-list" class="md:hidden flex flex-col divide-y divide-[#232a23]">
+          <!-- Rendered via JS -->
+        </div>
+
+     </section>
+
+  </main>
+
+  <!-- Success Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 panel-armor border-[#76ff03] bg-green-950/80 text-neon-green p-4 flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300 z-50 shadow-[0_0_20px_rgba(118,255,3,0.3)]">
+     <svg class="lucide w-6 h-6" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+     <div>
+        <h4 class="font-heavy tracking-wider">TRANSMISSION COMPLETE</h4>
+        <p class="font-tech text-xs text-green-200">EMR Log successfully synced to Deep Space Network.</p>
+     </div>
+  </div>
+
+  <script>
+    // Mock EMR Data
+    const logs = [
+      { id: 1, time: "142:0800z", name: "Cmdr. S. Mitchell", cat: "medication", catLabel: "Medication", desc: "Administered 10mg Melatonin", status: "nominal", statusLabel: "Nominal" },
+      { id: 2, time: "142:0430z", name: "Spec. J. Carver", cat: "vitals", catLabel: "Vitals", desc: "Heart rate spike (132 bpm) during EVA preparation.", status: "anomaly", statusLabel: "Anomaly" },
+      { id: 3, time: "141:2200z", name: "Eng. K. Thorne", cat: "bhp", catLabel: "BHP", desc: "Reported severe mission fatigue; PPC scheduled.", status: "critical", statusLabel: "Action Req" },
+      { id: 4, time: "141:1815z", name: "Dr. A. Vance", cat: "vitals", catLabel: "Vitals", desc: "Routine blood draw nominal. Bone markers stable.", status: "nominal", statusLabel: "Nominal" },
+      { id: 5, time: "141:1400z", name: "Eng. K. Thorne", cat: "medication", catLabel: "Medication", desc: "Prescribed Ibuprofen 400mg for joint pain post-EVA.", status: "anomaly", statusLabel: "Monitor" },
+      { id: 6, time: "141:0930z", name: "Cmdr. S. Mitchell", cat: "bhp", catLabel: "BHP", desc: "Cognitive readiness test completed: 98% nominal.", status: "nominal", statusLabel: "Nominal" }
+    ];
+
+    function getStatusStyles(status) {
+      if(status === 'nominal') return { dot: 'bg-neon-green shadow-[0_0_8px_lime]', text: 'text-neon-green' };
+      if(status === 'anomaly') return { dot: 'bg-gold shadow-[0_0_8px_orange]', text: 'text-gold' };
+      if(status === 'critical') return { dot: 'bg-red-500 shadow-[0_0_8px_red] animate-pulse', text: 'text-red-500' };
+      return { dot: 'bg-gray-500', text: 'text-gray-500' };
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById('desktop-tbody');
+      const mobileList = document.getElementById('mobile-list');
+      
+      tbody.innerHTML = '';
+      mobileList.innerHTML = '';
+
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No logs found matching criteria.</td></tr>`;
+        mobileList.innerHTML = `<div class="p-6 text-center text-gray-500">No logs found.</div>`;
+        return;
+      }
+
+      data.forEach(log => {
+        const s = getStatusStyles(log.status);
+        
+        // Desktop Row
+        tbody.innerHTML += `
+          <tr class="log-row">
+            <td class="px-6 py-4 text-gray-500">${log.time}</td>
+            <td class="px-6 py-4">
+              <div class="font-heavy tracking-wide text-gray-300 mb-1.5">${log.name}</div>
+              <div class="flex gap-2">
+                <button onclick="viewAllLogs('${log.name}')" class="text-[9px] text-purple-400 hover:text-white uppercase tracking-widest bg-[#1a201a] border border-purple-900/50 hover:bg-purple-900/30 px-2 py-0.5 transition-colors shadow-sm cursor-pointer">VIEW ALL LOGS</button>
+                <button onclick="viewLatestLog('${log.name}')" class="text-[9px] text-cyan-400 hover:text-white uppercase tracking-widest bg-[#1a201a] border border-cyan-900/50 hover:bg-cyan-900/30 px-2 py-0.5 transition-colors shadow-sm cursor-pointer">VIEW LATEST LOG</button>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <span class="bg-[#1a201a] border border-[#232a23] px-2 py-1 text-xs text-purple-400 uppercase tracking-widest">${log.catLabel}</span>
+            </td>
+            <td class="px-6 py-4 text-gray-400 whitespace-normal min-w-[300px]">${log.desc}</td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-2">
+                <span class="font-heavy text-xs uppercase tracking-widest ${s.text}">${log.statusLabel}</span>
+                <div class="w-2.5 h-2.5 rounded-full ${s.dot}"></div>
+              </div>
+            </td>
+          </tr>
+        `;
+
+        // Mobile Card
+        mobileList.innerHTML += `
+          <div class="p-4 bg-black/40 hover:bg-black/60 transition-colors">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <span class="text-xs text-gray-500">${log.time}</span>
+                <h3 class="font-heavy text-gray-300 tracking-wider text-base mt-0.5">${log.name}</h3>
+                <div class="flex gap-2 mt-2">
+                  <button onclick="viewAllLogs('${log.name}')" class="text-[9px] text-purple-400 hover:text-white uppercase tracking-widest bg-[#1a201a] border border-purple-900/50 hover:bg-purple-900/30 px-2 py-0.5 transition-colors">VIEW ALL</button>
+                  <button onclick="viewLatestLog('${log.name}')" class="text-[9px] text-cyan-400 hover:text-white uppercase tracking-widest bg-[#1a201a] border border-cyan-900/50 hover:bg-cyan-900/30 px-2 py-0.5 transition-colors">LATEST</button>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="font-heavy text-xs uppercase tracking-widest ${s.text}">${log.statusLabel}</span>
+                <div class="w-2.5 h-2.5 rounded-full ${s.dot}"></div>
+              </div>
+            </div>
+            <span class="inline-block bg-[#1a201a] border border-[#232a23] px-2 py-0.5 text-[10px] text-purple-400 uppercase tracking-widest mb-2 mt-2">${log.catLabel}</span>
+            <p class="text-sm text-gray-400 leading-relaxed">${log.desc}</p>
+          </div>
+        `;
+      });
+    }
+
+    function filterLogs() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      const cat = document.getElementById('filter-category').value;
+      const status = document.getElementById('filter-status').value;
+
+      const filtered = logs.filter(log => {
+        const matchesSearch = log.name.toLowerCase().includes(q) || log.desc.toLowerCase().includes(q);
+        const matchesCat = (cat === 'all') || (log.cat === cat);
+        const matchesStatus = (status === 'all') || (log.status === status);
+        return matchesSearch && matchesCat && matchesStatus;
+      });
+
+      renderTable(filtered);
+    }
+
+    // Export Action
+    function exportLog() {
+      const btn = document.getElementById('btn-export');
+      const toast = document.getElementById('toast');
+      const origHtml = btn.innerHTML;
+      
+      // Loading State
+      btn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+        TRANSMITTING...
+      `;
+      btn.classList.add('bg-purple-900', 'border-purple-900', 'pointer-events-none');
+      btn.classList.remove('bg-purple-600', 'hover:bg-purple-500');
+
+      // Success Toast & Reset
+      setTimeout(() => {
+        btn.innerHTML = origHtml;
+        btn.classList.remove('bg-purple-900', 'border-purple-900', 'pointer-events-none');
+        btn.classList.add('bg-purple-600', 'hover:bg-purple-500');
+        
+        toast.classList.remove('translate-y-24', 'opacity-0');
+        
+        setTimeout(() => {
+          toast.classList.add('translate-y-24', 'opacity-0');
+        }, 4000);
+      }, 2000);
+    }
+
+    function viewAllLogs(name) {
+      document.getElementById('search-input').value = name;
+      document.getElementById('filter-category').value = 'all';
+      document.getElementById('filter-status').value = 'all';
+      filterLogs();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function viewLatestLog(name) {
+      document.getElementById('search-input').value = name;
+      document.getElementById('filter-category').value = 'all';
+      document.getElementById('filter-status').value = 'all';
+      
+      const filtered = logs.filter(log => log.name === name);
+      renderTable(filtered.length > 0 ? [filtered[0]] : []);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Init
+    renderTable(logs);
+  </script>
+</body>
+</html>

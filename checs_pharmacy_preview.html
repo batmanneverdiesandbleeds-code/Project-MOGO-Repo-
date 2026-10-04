@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Global Styles & Branding */
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Share+Tech+Mono&display=swap');
+    
+    .font-heavy { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
+    .font-tech { font-family: 'Share Tech Mono', monospace; }
+    
+    .bg-grunge {
+      background-color: #050605;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(30, 40, 30, 0.3) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.4) 2px, rgba(0,0,0,0.4) 4px);
+      color: #9ca3af;
+    }
+    
+    .text-neon-green { color: #76ff03; text-shadow: 0 0 10px rgba(118, 255, 3, 0.5); }
+    .text-gold { color: #ffb700; text-shadow: 0 0 10px rgba(255, 183, 0, 0.4); }
+
+    .diamond-icon {
+      width: 14px; height: 14px; background-color: #76ff03;
+      transform: rotate(45deg); display: inline-block;
+      box-shadow: 0 0 10px #76ff03;
+    }
+    
+    .diamond-icon-red {
+      width: 14px; height: 14px; background-color: #ff3333;
+      transform: rotate(45deg); display: inline-block;
+      box-shadow: 0 0 10px #ff3333;
+    }
+
+    .panel-armor {
+      background: linear-gradient(135deg, #161816 0%, #0a0b0a 100%);
+      border: 2px solid #232a23;
+      clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+      position: relative;
+    }
+    
+    .btn-heavy {
+      clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+      font-family: 'Oswald', sans-serif; text-transform: uppercase;
+    }
+    
+    input[type=text] {
+      background: #0a0b0a; border: 1px solid #232a23; color: #76ff03; font-family: 'Share Tech Mono', monospace;
+      padding: 0.75rem; outline: none; width: 100%; transition: border-color 0.2s;
+    }
+    input[type=text]:focus { border-color: #76ff03; }
+    
+    /* Futuristic Checkbox */
+    .med-checkbox {
+       appearance: none;
+       width: 24px; height: 24px;
+       border: 2px solid #4a544a;
+       background-color: #0a0b0a;
+       position: relative;
+       cursor: pointer;
+       transition: all 0.2s;
+       clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+    }
+    .med-checkbox:checked {
+       background-color: #76ff03;
+       border-color: #76ff03;
+       box-shadow: 0 0 10px rgba(118, 255, 3, 0.5);
+    }
+    .med-checkbox:checked::after {
+       content: '';
+       position: absolute;
+       top: 4px; left: 8px;
+       width: 6px; height: 12px;
+       border: solid #000;
+       border-width: 0 2px 2px 0;
+       transform: rotate(45deg);
+    }
+
+    svg.lucide { stroke-width: 2; fill: none; stroke: currentColor; }
+  </style>
+</head>
+<body class="bg-grunge text-gray-300 font-tech p-4 md:p-6 lg:p-8 min-h-screen">
+
+  <!-- Header -->
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b-2 border-[#232a23] mb-8">
+    <div>
+      <div class="flex items-center gap-3 mb-1">
+        <div class="diamond-icon-red"></div>
+        <h1 class="text-4xl font-heavy text-red-500 tracking-widest drop-shadow-[0_0_8px_rgba(255,51,51,0.6)]">CHeCS PHARMACY & MCT</h1>
+      </div>
+      <p class="text-sm text-gray-400 mt-1">Crew Health Care System - Medical Consumables Tracking Interface</p>
+    </div>
+    <div class="mt-4 md:mt-0">
+       <button class="btn-heavy bg-[#232a23] text-gray-300 px-6 py-2 border border-[#4a544a] hover:bg-[#333e33] transition-colors" onclick="window.location.href='index.html'">
+          RETURN TO MAIN DASHBOARD
+       </button>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Left Column (Span 8) -->
+    <div class="lg:col-span-8 space-y-8">
+      
+      <!-- 1. Daily Intake Schedule -->
+      <section class="panel-armor p-6 md:p-8">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-[#232a23] pb-2 gap-4">
+          <h2 class="text-xl font-heavy text-gray-200 flex items-center gap-2">
+            PERSONAL MEDICATION PROTOCOL
+          </h2>
+          <button id="add-prescription-btn" onclick="addPrescription()" class="btn-heavy text-sm bg-[#1a201a] border border-cyan-900/50 text-cyan-400 hover:bg-cyan-900/30 hover:text-white px-4 py-1.5 transition-colors tracking-widest shadow-sm">
+             + ADD PRESCRIPTION
+          </button>
+        </div>
+        
+        <!-- Timeline Container -->
+        <div class="relative border-l-2 border-[#232a23] ml-4 pl-8 space-y-8 py-2">
+          
+          <!-- 0800 Hours -->
+          <div class="relative">
+             <div class="absolute -left-[41px] top-1 w-4 h-4 bg-[#0a0b0a] border-2 border-[#76ff03] rounded-full shadow-[0_0_8px_rgba(118,255,3,0.5)]"></div>
+             <h3 class="font-heavy text-neon-green text-lg tracking-widest mb-3">0800 HOURS - POST-WAKE</h3>
+             
+             <div class="bg-black/50 border border-[#232a23] p-4 flex items-center gap-4 hover:border-[#4a544a] transition-colors">
+                <input type="checkbox" class="med-checkbox shrink-0" onchange="toggleMedState(this)">
+                <div class="flex-1 opacity-100 transition-opacity">
+                   <h4 class="font-heavy text-gray-300 text-base tracking-wide">Vitamin D3 / Calcium Supplement</h4>
+                   <p class="text-xs text-gray-500 mt-1 uppercase">Indication: Microgravity bone density preservation</p>
+                </div>
+                <div class="font-tech text-gray-400 text-sm border-l border-[#232a23] pl-4">1x TAB (Oral)</div>
+             </div>
+          </div>
+
+          <!-- 1300 Hours -->
+          <div class="relative">
+             <div class="absolute -left-[41px] top-1 w-4 h-4 bg-[#0a0b0a] border-2 border-gold rounded-full shadow-[0_0_8px_rgba(255,183,0,0.5)]"></div>
+             <h3 class="font-heavy text-gold text-lg tracking-widest mb-3">1300 HOURS - MIDDAY</h3>
+             
+             <div class="bg-black/50 border border-[#232a23] p-4 flex items-center gap-4 hover:border-[#4a544a] transition-colors">
+                <input type="checkbox" class="med-checkbox shrink-0" onchange="toggleMedState(this)">
+                <div class="flex-1 opacity-100 transition-opacity">
+                   <h4 class="font-heavy text-gray-300 text-base tracking-wide">Promethazine</h4>
+                   <p class="text-xs text-gray-500 mt-1 uppercase">Indication: Space Adaptation Syndrome mitigation</p>
+                </div>
+                <div class="font-tech text-gray-400 text-sm border-l border-[#232a23] pl-4">25mg IM</div>
+             </div>
+          </div>
+
+          <!-- 2200 Hours -->
+          <div class="relative">
+             <div class="absolute -left-[41px] top-1 w-4 h-4 bg-[#0a0b0a] border-2 border-blue-400 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+             <h3 class="font-heavy text-blue-400 text-lg tracking-widest mb-3">2200 HOURS - PRE-SLEEP</h3>
+             
+             <div class="bg-black/50 border border-[#232a23] p-4 flex items-center gap-4 hover:border-[#4a544a] transition-colors">
+                <input type="checkbox" class="med-checkbox shrink-0" onchange="toggleMedState(this)">
+                <div class="flex-1 opacity-100 transition-opacity">
+                   <h4 class="font-heavy text-gray-300 text-base tracking-wide">Melatonin</h4>
+                   <p class="text-xs text-gray-500 mt-1 uppercase">Indication: Circadian rhythm alignment (16 sunsets/day)</p>
+                </div>
+                <div class="font-tech text-gray-400 text-sm border-l border-[#232a23] pl-4">3mg (Oral)</div>
+             </div>
+          </div>
+          
+        </div>
+      </section>
+
+      <!-- 3. ISS Inventory Tracker -->
+      <section class="panel-armor p-6 md:p-8">
+        <h2 class="text-xl font-heavy text-gray-200 mb-6 flex items-center gap-2 border-b border-[#232a23] pb-2">
+          MEDICAL CONSUMABLES TRACKING (MCT) - RFID STATUS
+        </h2>
+        
+        <div class="space-y-6 mb-8">
+           <!-- Pack 1 -->
+           <div>
+             <div class="flex justify-between text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">
+               <span>Sub-Pack: Analgesics (Pain/Fever)</span>
+               <span class="text-neon-green">82% (NOMINAL)</span>
+             </div>
+             <div class="w-full bg-[#1a201a] h-3 border border-[#232a23]">
+               <div class="bg-[#76ff03] h-full shadow-[0_0_10px_rgba(118,255,3,0.3)]" style="width: 82%"></div>
+             </div>
+           </div>
+           
+           <!-- Pack 2 -->
+           <div>
+             <div class="flex justify-between text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">
+               <span>Sub-Pack: Sleep & Alertness</span>
+               <span class="text-gold">41% (AWAIT DRAGON RESUPPLY)</span>
+             </div>
+             <div class="w-full bg-[#1a201a] h-3 border border-[#232a23]">
+               <div class="bg-[#ffb700] h-full shadow-[0_0_10px_rgba(255,183,0,0.3)] animate-pulse" style="width: 41%"></div>
+             </div>
+           </div>
+
+           <!-- Pack 3 -->
+           <div>
+             <div class="flex justify-between text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">
+               <span>Sub-Pack: Emergency Trauma / AED</span>
+               <span class="text-blue-400">100% (SEALED)</span>
+             </div>
+             <div class="w-full bg-[#1a201a] h-3 border border-[#232a23]">
+               <div class="bg-blue-500 h-full shadow-[0_0_10px_rgba(59,130,246,0.3)]" style="width: 100%"></div>
+             </div>
+           </div>
+        </div>
+
+        <!-- 4. Resupply Request Action -->
+        <div class="border-t border-[#232a23] pt-6 flex">
+           <button id="btn-resupply" onclick="queueResupply()" class="w-full md:w-auto px-8 py-3 btn-heavy bg-[#76ff03] hover:bg-[#8aff29] text-black font-heavy text-sm tracking-widest transition-colors shadow-[0_0_15px_rgba(118,255,3,0.3)] flex items-center justify-center gap-2">
+              <svg class="lucide w-5 h-5" viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 7 12 2 7 7"/><path d="m17 17-5 5-5-5"/></svg>
+              QUEUE RESUPPLY ON NEXT CARGO DRAGON
+           </button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Right Column (Span 4) -->
+    <div class="lg:col-span-4">
+      
+      <!-- 2. Pharmacological Database -->
+      <section class="panel-armor p-6 sticky top-6">
+        <h2 class="text-xl font-heavy text-gray-200 mb-4 flex items-center gap-2 border-b border-[#232a23] pb-2">
+          CHeCS FORMULARY DATABASE
+        </h2>
+        
+        <input type="text" id="formulary-search" placeholder="Search pharmacological database..." onkeyup="filterFormulary()" class="mb-6 focus:ring-1 focus:ring-[#76ff03]" />
+        
+        <div id="formulary-list" class="space-y-3 h-[600px] overflow-y-auto pr-2">
+           
+           <!-- Item 1 -->
+           <div class="form-item">
+             <button onclick="toggleF('med-1')" class="w-full flex items-center justify-between p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#76ff03]/50 transition-colors group">
+               <h3 class="font-heavy text-gray-300 text-sm tracking-wide group-hover:text-neon-green transition-colors text-left">Scopolamine / Dextroamphetamine</h3>
+               <svg id="icon-med-1" class="lucide w-4 h-4 text-gray-500 transition-transform shrink-0" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+             </button>
+             <div id="med-1" class="hidden p-4 border-x border-b border-[#232a23] bg-black/40">
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Indication</p>
+               <p class="text-sm text-gray-300 mb-4">Severe Motion Sickness (SAS)</p>
+               
+               <p class="text-xs font-bold text-gold uppercase tracking-widest mb-1">Microgravity Side Effects</p>
+               <p class="text-sm text-gray-400 mb-4 border-l-2 border-gold pl-2">Note: Absorption rate altered in zero-G; monitor for delayed onset. Dextroamphetamine added to counter Scopolamine sedation.</p>
+               
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Dosage</p>
+               <p class="text-sm text-gray-300 font-tech">0.4mg SCOP / 5mg DEX (Oral)</p>
+             </div>
+           </div>
+
+           <!-- Item 2 -->
+           <div class="form-item">
+             <button onclick="toggleF('med-2')" class="w-full flex items-center justify-between p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#76ff03]/50 transition-colors group">
+               <h3 class="font-heavy text-gray-300 text-sm tracking-wide group-hover:text-neon-green transition-colors text-left">Promethazine</h3>
+               <svg id="icon-med-2" class="lucide w-4 h-4 text-gray-500 transition-transform shrink-0" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+             </button>
+             <div id="med-2" class="hidden p-4 border-x border-b border-[#232a23] bg-black/40">
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Indication</p>
+               <p class="text-sm text-gray-300 mb-4">Acute Nausea / Vomiting (SAS)</p>
+               
+               <p class="text-xs font-bold text-gold uppercase tracking-widest mb-1">Microgravity Side Effects</p>
+               <p class="text-sm text-gray-400 mb-4 border-l-2 border-gold pl-2">Causes significant sedation. Do not administer prior to EVA or critical robotic arm operations.</p>
+               
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Dosage</p>
+               <p class="text-sm text-gray-300 font-tech">25mg - 50mg (Intramuscular injection preferred due to gastric stasis)</p>
+             </div>
+           </div>
+           
+           <!-- Item 3 -->
+           <div class="form-item">
+             <button onclick="toggleF('med-3')" class="w-full flex items-center justify-between p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#76ff03]/50 transition-colors group">
+               <h3 class="font-heavy text-gray-300 text-sm tracking-wide group-hover:text-neon-green transition-colors text-left">Alendronate (Bisphosphonate)</h3>
+               <svg id="icon-med-3" class="lucide w-4 h-4 text-gray-500 transition-transform shrink-0" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+             </button>
+             <div id="med-3" class="hidden p-4 border-x border-b border-[#232a23] bg-black/40">
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Indication</p>
+               <p class="text-sm text-gray-300 mb-4">Bone density loss prevention during long-duration flight.</p>
+               
+               <p class="text-xs font-bold text-gold uppercase tracking-widest mb-1">Microgravity Side Effects</p>
+               <p class="text-sm text-gray-400 mb-4 border-l-2 border-gold pl-2">Esophageal irritation. Must remain upright for 30 minutes post-dose. Secure with restraints if necessary.</p>
+               
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Dosage</p>
+               <p class="text-sm text-gray-300 font-tech">70mg once weekly</p>
+             </div>
+           </div>
+
+           <!-- Item 4 -->
+           <div class="form-item">
+             <button onclick="toggleF('med-4')" class="w-full flex items-center justify-between p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#76ff03]/50 transition-colors group">
+               <h3 class="font-heavy text-gray-300 text-sm tracking-wide group-hover:text-neon-green transition-colors text-left">Potassium Citrate</h3>
+               <svg id="icon-med-4" class="lucide w-4 h-4 text-gray-500 transition-transform shrink-0" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+             </button>
+             <div id="med-4" class="hidden p-4 border-x border-b border-[#232a23] bg-black/40">
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Indication</p>
+               <p class="text-sm text-gray-300 mb-4">Prevention of renal stone formation (due to calcium excretion from bone loss).</p>
+               
+               <p class="text-xs font-bold text-gold uppercase tracking-widest mb-1">Microgravity Side Effects</p>
+               <p class="text-sm text-gray-400 mb-4 border-l-2 border-gold pl-2">Mild gastrointestinal distress. Maintain high fluid intake.</p>
+               
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Dosage</p>
+               <p class="text-sm text-gray-300 font-tech">20 mEq (Oral) daily</p>
+             </div>
+           </div>
+
+           <!-- Item 5 -->
+           <div class="form-item">
+             <button onclick="toggleF('med-5')" class="w-full flex items-center justify-between p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#76ff03]/50 transition-colors group">
+               <h3 class="font-heavy text-gray-300 text-sm tracking-wide group-hover:text-neon-green transition-colors text-left">Acetaminophen (Analgesic)</h3>
+               <svg id="icon-med-5" class="lucide w-4 h-4 text-gray-500 transition-transform shrink-0" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+             </button>
+             <div id="med-5" class="hidden p-4 border-x border-b border-[#232a23] bg-black/40">
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Indication</p>
+               <p class="text-sm text-gray-300 mb-4">Mild to moderate pain relief, headache (frequent in early flight), and fever reduction.</p>
+               
+               <p class="text-xs font-bold text-gold uppercase tracking-widest mb-1">Microgravity Side Effects</p>
+               <p class="text-sm text-gray-400 mb-4 border-l-2 border-gold pl-2">Nominal. Highly stable in standard ISS environmental conditions.</p>
+               
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Dosage</p>
+               <p class="text-sm text-gray-300 font-tech">500mg - 1000mg (Oral) every 6 hours as needed</p>
+             </div>
+           </div>
+
+           <!-- Item 6 -->
+           <div class="form-item">
+             <button onclick="toggleF('med-6')" class="w-full flex items-center justify-between p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#76ff03]/50 transition-colors group">
+               <h3 class="font-heavy text-gray-300 text-sm tracking-wide group-hover:text-neon-green transition-colors text-left">Ibuprofen (NSAID)</h3>
+               <svg id="icon-med-6" class="lucide w-4 h-4 text-gray-500 transition-transform shrink-0" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+             </button>
+             <div id="med-6" class="hidden p-4 border-x border-b border-[#232a23] bg-black/40">
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Indication</p>
+               <p class="text-sm text-gray-300 mb-4">Musculoskeletal pain, inflammation from Extravehicular Activity (EVA) suit pressure points.</p>
+               
+               <p class="text-xs font-bold text-gold uppercase tracking-widest mb-1">Microgravity Side Effects</p>
+               <p class="text-sm text-gray-400 mb-4 border-l-2 border-gold pl-2">Increased risk of gastric irritation due to prolonged zero-G fluid shifts. Take with food pouch.</p>
+               
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Dosage</p>
+               <p class="text-sm text-gray-300 font-tech">400mg - 800mg (Oral) every 8 hours</p>
+             </div>
+           </div>
+
+           <!-- Item 7 -->
+           <div class="form-item">
+             <button onclick="toggleF('med-7')" class="w-full flex items-center justify-between p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#76ff03]/50 transition-colors group">
+               <h3 class="font-heavy text-gray-300 text-sm tracking-wide group-hover:text-neon-green transition-colors text-left">Zolpidem (Sedative)</h3>
+               <svg id="icon-med-7" class="lucide w-4 h-4 text-gray-500 transition-transform shrink-0" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+             </button>
+             <div id="med-7" class="hidden p-4 border-x border-b border-[#232a23] bg-black/40">
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Indication</p>
+               <p class="text-sm text-gray-300 mb-4">Severe insomnia due to circadian disruption (16 sunsets per day) or high-stress mission pacing.</p>
+               
+               <p class="text-xs font-bold text-gold uppercase tracking-widest mb-1">Microgravity Side Effects</p>
+               <p class="text-sm text-gray-400 mb-4 border-l-2 border-gold pl-2">Sedation hangover can mask CO2 toxicity symptoms. Restrict usage within 12 hours of an EVA.</p>
+               
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Dosage</p>
+               <p class="text-sm text-gray-300 font-tech">5mg - 10mg (Oral) strictly pre-sleep</p>
+             </div>
+           </div>
+
+           <!-- Item 8 -->
+           <div class="form-item">
+             <button onclick="toggleF('med-8')" class="w-full flex items-center justify-between p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#76ff03]/50 transition-colors group">
+               <h3 class="font-heavy text-gray-300 text-sm tracking-wide group-hover:text-neon-green transition-colors text-left">Ciprofloxacin (Antibiotic)</h3>
+               <svg id="icon-med-8" class="lucide w-4 h-4 text-gray-500 transition-transform shrink-0" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+             </button>
+             <div id="med-8" class="hidden p-4 border-x border-b border-[#232a23] bg-black/40">
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Indication</p>
+               <p class="text-sm text-gray-300 mb-4">Broad-spectrum antibiotic for respiratory, skin, or urinary tract infections onboard.</p>
+               
+               <p class="text-xs font-bold text-gold uppercase tracking-widest mb-1">Microgravity Side Effects</p>
+               <p class="text-sm text-gray-400 mb-4 border-l-2 border-gold pl-2">Efficacy may degrade faster than on Earth due to high ambient cosmic radiation destroying active compounds.</p>
+               
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Dosage</p>
+               <p class="text-sm text-gray-300 font-tech">500mg (Oral) every 12 hours</p>
+             </div>
+           </div>
+
+           <!-- Item 9 -->
+           <div class="form-item">
+             <button onclick="toggleF('med-9')" class="w-full flex items-center justify-between p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#76ff03]/50 transition-colors group">
+               <h3 class="font-heavy text-gray-300 text-sm tracking-wide group-hover:text-neon-green transition-colors text-left">Pseudoephedrine (Decongestant)</h3>
+               <svg id="icon-med-9" class="lucide w-4 h-4 text-gray-500 transition-transform shrink-0" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+             </button>
+             <div id="med-9" class="hidden p-4 border-x border-b border-[#232a23] bg-black/40">
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Indication</p>
+               <p class="text-sm text-gray-300 mb-4">Severe nasal congestion (treating the "Puffy Head Syndrome" caused by fluid shift to the upper body).</p>
+               
+               <p class="text-xs font-bold text-gold uppercase tracking-widest mb-1">Microgravity Side Effects</p>
+               <p class="text-sm text-gray-400 mb-4 border-l-2 border-gold pl-2">Elevated heart rate. Do not administer simultaneously with high-caffeine rations or before intense aerobic exercise.</p>
+               
+               <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Dosage</p>
+               <p class="text-sm text-gray-300 font-tech">30mg - 60mg (Oral) every 6 hours</p>
+             </div>
+           </div>
+
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    // 1. Intake Schedule Checkbox Strikethrough
+    function toggleMedState(checkbox) {
+      const textContainer = checkbox.nextElementSibling;
+      if (checkbox.checked) {
+         textContainer.classList.add('opacity-40', 'line-through');
+      } else {
+         textContainer.classList.remove('opacity-40', 'line-through');
+      }
+    }
+
+    // 2. Formulary Database Accordion
+    function toggleF(id) {
+      const content = document.getElementById(id);
+      const icon = document.getElementById('icon-' + id);
+      
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+        icon.classList.add('text-neon-green');
+      } else {
+        content.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+        icon.classList.remove('text-neon-green');
+      }
+    }
+
+    // 3. Search Filter
+    function filterFormulary() {
+      const q = document.getElementById('formulary-search').value.toLowerCase();
+      const items = document.querySelectorAll('.form-item');
+      items.forEach(item => {
+        const text = item.querySelector('h3').innerText.toLowerCase();
+        item.style.display = text.includes(q) ? 'block' : 'none';
+      });
+    }
+
+    // 4. Resupply Request Button State
+    function queueResupply() {
+      const btn = document.getElementById('btn-resupply');
+      
+      // Loading State
+      btn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+        TRANSMITTING TO HOUSTON...
+      `;
+      btn.className = "w-full md:w-auto px-8 py-3 btn-heavy bg-[#232a23] text-white font-heavy text-sm tracking-widest flex items-center justify-center gap-2 pointer-events-none";
+      
+      // Success State after 2.5 seconds
+      setTimeout(() => {
+        btn.innerHTML = `
+          <svg class="lucide w-5 h-5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+          MANIFEST UPDATED
+        `;
+        btn.className = "w-full md:w-auto px-8 py-3 btn-heavy bg-blue-500 text-white font-heavy text-sm tracking-widest flex items-center justify-center gap-2 pointer-events-none shadow-[0_0_15px_rgba(59,130,246,0.5)]";
+        
+        // Return to normal after another 3 seconds
+        setTimeout(() => {
+          btn.innerHTML = `
+            <svg class="lucide w-5 h-5" viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 7 12 2 7 7"/><path d="m17 17-5 5-5-5"/></svg>
+            QUEUE RESUPPLY ON NEXT CARGO DRAGON
+          `;
+          btn.className = "w-full md:w-auto px-8 py-3 btn-heavy bg-[#76ff03] hover:bg-[#8aff29] text-black font-heavy text-sm tracking-widest transition-colors shadow-[0_0_15px_rgba(118,255,3,0.3)] flex items-center justify-center gap-2";
+        }, 3000);
+      }, 2500);
+    }
+
+    function addPrescription() {
+      const btn = document.getElementById('add-prescription-btn');
+      
+      // Update Button State
+      btn.innerHTML = 'ADDED';
+      btn.classList.remove('border-cyan-900/50', 'text-cyan-400', 'hover:bg-cyan-900/30', 'hover:text-white');
+      btn.classList.add('border-[#76ff03]', 'text-[#76ff03]', 'bg-green-900/30', 'pointer-events-none');
+      
+      // Create and inject Toast Notification
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-6 right-6 panel-armor border-[#76ff03] bg-green-950/90 text-neon-green p-4 flex items-center gap-3 transform translate-x-full transition-all duration-300 z-50 shadow-[0_0_20px_rgba(118,255,3,0.3)] backdrop-blur-sm';
+      toast.innerHTML = `
+         <svg class="lucide w-6 h-6" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+         <div>
+            <h4 class="font-heavy tracking-wider text-sm">PRESCRIPTION ADDED</h4>
+            <p class="font-tech text-xs text-green-200">Chief Medical Officer has been notified.</p>
+         </div>
+      `;
+      document.body.appendChild(toast);
+      
+      // Trigger slide in
+      setTimeout(() => toast.classList.remove('translate-x-full'), 100);
+      
+      // Trigger slide out and remove
+      setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Global Styles & Branding */
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Share+Tech+Mono&display=swap');
+    
+    .font-heavy { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
+    .font-tech { font-family: 'Share Tech Mono', monospace; }
+    
+    .bg-grunge {
+      background-color: #050605;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(30, 40, 30, 0.3) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.4) 2px, rgba(0,0,0,0.4) 4px);
+      color: #9ca3af;
+    }
+    
+    .text-neon-green { color: #76ff03; text-shadow: 0 0 10px rgba(118, 255, 3, 0.5); }
+    .text-gold { color: #ffb700; text-shadow: 0 0 10px rgba(255, 183, 0, 0.4); }
+
+    .diamond-icon {
+      width: 14px; height: 14px; background-color: #06b6d4;
+      transform: rotate(45deg); display: inline-block;
+      box-shadow: 0 0 10px #06b6d4;
+    }
+
+    .panel-armor {
+      background: linear-gradient(135deg, rgba(22, 24, 22, 0.85) 0%, rgba(10, 11, 10, 0.95) 100%);
+      border: 2px solid #232a23;
+      clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+      position: relative;
+    }
+    
+    .btn-heavy {
+      clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+      font-family: 'Oswald', sans-serif; text-transform: uppercase;
+    }
+
+    /* Form Controls */
+    input[type=text] {
+      background: #0a0b0a; border: 1px solid #232a23; color: #06b6d4; font-family: 'Share Tech Mono', monospace;
+      padding: 0.75rem 1rem; outline: none; transition: border-color 0.2s;
+    }
+    input[type=text]:focus { border-color: #06b6d4; box-shadow: 0 0 10px rgba(6, 182, 212, 0.2); }
+
+    /* Custom Checkboxes */
+    .sans-checkbox {
+       appearance: none; width: 20px; height: 20px; border: 2px solid #4a544a; background-color: #0a0b0a;
+       position: relative; cursor: pointer; transition: all 0.2s;
+       clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+    }
+    .sans-checkbox:checked { background-color: #06b6d4; border-color: #06b6d4; box-shadow: 0 0 10px rgba(6, 182, 212, 0.5); }
+    
+    /* Quiz Radios */
+    .quiz-radio { appearance: none; }
+    .quiz-radio:checked + div {
+      background-color: #06b6d4; color: #000; border-color: #06b6d4; box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+    }
+
+    svg.lucide { stroke-width: 2; fill: none; stroke: currentColor; }
+  </style>
+</head>
+<body class="bg-grunge text-gray-300 font-tech p-4 md:p-6 lg:p-8 min-h-screen relative overflow-x-hidden">
+
+  <!-- Header -->
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b-2 border-[#232a23] mb-8">
+    <div>
+      <div class="flex items-center gap-3 mb-1">
+        <div class="diamond-icon"></div>
+        <h1 class="text-4xl font-heavy text-cyan-500 tracking-widest drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]">COGNITIVE & SANS EVALUATION</h1>
+      </div>
+      <p class="text-sm text-gray-400 mt-1">Neurocognitive Battery & Spaceflight Associated Neuro-ocular Syndrome Log</p>
+    </div>
+    <div class="mt-4 md:mt-0">
+       <button class="btn-heavy bg-[#232a23] text-gray-300 px-6 py-2 border border-[#4a544a] hover:bg-[#333e33] transition-colors" onclick="window.location.href='index.html'">
+          RETURN TO DASHBOARD
+       </button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto z-10 relative space-y-8">
+     
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- Left Column -->
+      <div class="space-y-8">
+        
+        <!-- 1. Subjective Telemetry Module (Sliders) -->
+        <section class="panel-armor p-6 md:p-8">
+           <h2 class="text-xl font-heavy text-gray-200 tracking-wider flex items-center gap-2 border-b border-[#232a23] pb-3 mb-6">
+             <svg class="lucide w-5 h-5 text-cyan-500" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+             SUBJECTIVE TELEMETRY
+           </h2>
+           
+           <div class="space-y-8">
+             <div>
+               <div class="flex justify-between text-xs font-bold text-gray-400 mb-3 uppercase">
+                 <span>Perceived Fatigue Level</span>
+                 <span id="lbl-fatigue" class="text-cyan-400 text-sm font-heavy">1 / 10</span>
+               </div>
+               <input type="range" id="val-fatigue" min="1" max="10" value="1" oninput="document.getElementById('lbl-fatigue').innerText = this.value + ' / 10'" class="w-full accent-cyan-500 bg-[#1a201a] h-3 appearance-none cursor-pointer border border-[#232a23]" />
+               <div class="flex justify-between text-[10px] text-gray-500 mt-2 uppercase">
+                 <span>Fully Rested (1)</span><span>Exhausted (10)</span>
+               </div>
+             </div>
+
+             <div>
+               <div class="flex justify-between text-xs font-bold text-gray-400 mb-3 uppercase">
+                 <span>Psychological Stress Index</span>
+                 <span id="lbl-stress" class="text-cyan-400 text-sm font-heavy">1 / 10</span>
+               </div>
+               <input type="range" id="val-stress" min="1" max="10" value="1" oninput="document.getElementById('lbl-stress').innerText = this.value + ' / 10'" class="w-full accent-cyan-500 bg-[#1a201a] h-3 appearance-none cursor-pointer border border-[#232a23]" />
+               <div class="flex justify-between text-[10px] text-gray-500 mt-2 uppercase">
+                 <span>Nominal (1)</span><span>Severe Distress (10)</span>
+               </div>
+             </div>
+           </div>
+        </section>
+
+        <!-- 2. SANS (Neuro-ocular) Log Section -->
+        <section class="panel-armor p-6 md:p-8">
+           <h2 class="text-xl font-heavy text-gray-200 tracking-wider flex items-center gap-2 border-b border-[#232a23] pb-3 mb-6">
+             <svg class="lucide w-5 h-5 text-cyan-500" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+             SANS DIAGNOSTIC LOG
+           </h2>
+           <p class="text-xs text-gray-500 mb-6">Select any neuro-ocular symptoms experienced during the current orbital cycle.</p>
+           
+           <div class="space-y-3">
+             <label class="flex items-center gap-4 p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#4a544a] cursor-pointer transition-colors group">
+               <input type="checkbox" id="sans-1" class="sans-checkbox shrink-0">
+               <span class="text-sm font-heavy tracking-wide text-gray-400 group-hover:text-gray-200">Decreased Near Vision Acuity</span>
+             </label>
+             <label class="flex items-center gap-4 p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#4a544a] cursor-pointer transition-colors group">
+               <input type="checkbox" id="sans-2" class="sans-checkbox shrink-0">
+               <span class="text-sm font-heavy tracking-wide text-gray-400 group-hover:text-gray-200">Perceived Cotton Wool Spots (Blind spots)</span>
+             </label>
+             <label class="flex items-center gap-4 p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#4a544a] cursor-pointer transition-colors group">
+               <input type="checkbox" id="sans-3" class="sans-checkbox shrink-0">
+               <span class="text-sm font-heavy tracking-wide text-gray-400 group-hover:text-gray-200">Optic Disc Edema (Swelling/Pressure behind eyes)</span>
+             </label>
+             <label class="flex items-center gap-4 p-4 bg-[#0a0b0a] border border-[#232a23] hover:border-[#4a544a] cursor-pointer transition-colors group">
+               <input type="checkbox" id="sans-4" class="sans-checkbox shrink-0">
+               <span class="text-sm font-heavy tracking-wide text-gray-400 group-hover:text-gray-200">Headaches / Migraine Presence</span>
+             </label>
+           </div>
+        </section>
+
+      </div>
+
+      <!-- Right Column -->
+      <div>
+        <!-- 3. Objective Cognitive Assessment (The Quiz) -->
+        <section class="panel-armor p-6 md:p-8 h-full flex flex-col">
+           <h2 class="text-xl font-heavy text-gray-200 tracking-wider flex items-center gap-2 border-b border-[#232a23] pb-3 mb-6">
+             <svg class="lucide w-5 h-5 text-cyan-500" viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+             EXECUTIVE FUNCTION & SPATIAL BATTERY
+           </h2>
+           
+           <div class="flex-1 space-y-10">
+             
+             <!-- Q1: Memory -->
+             <div>
+                <div class="flex justify-between items-center mb-3">
+                  <h3 class="text-sm font-heavy text-gray-300 tracking-wide">1. SHORT-TERM MEMORY RECALL</h3>
+                  <button id="btn-show-seq" onclick="showSequence()" class="text-xs bg-[#232a23] px-2 py-1 text-cyan-400 border border-cyan-900 hover:bg-cyan-950">FLASH SEQUENCE</button>
+                </div>
+                <div id="seq-display" class="w-full p-4 bg-black border border-[#232a23] text-center font-heavy tracking-[0.5em] text-xl text-gray-600 mb-3 select-none h-16 flex justify-center items-center">
+                  [ HIDDEN ]
+                </div>
+                <input type="text" id="quiz-1" placeholder="Enter sequence exactly as shown..." class="w-full text-center tracking-widest font-heavy" autocomplete="off" />
+             </div>
+
+             <!-- Q2: Stroop Analog -->
+             <div class="pt-6 border-t border-[#1a201a]">
+                <h3 class="text-sm font-heavy text-gray-300 tracking-wide mb-2">2. EXECUTIVE FUNCTION / INTERFERENCE</h3>
+                <p class="text-sm text-gray-400 mb-4 bg-[#0a0b0a] p-3 border-l-2 border-[#232a23]">If a warning light flashes <strong class="text-blue-500">BLUE</strong> but the text reads <strong class="text-red-500">"OXYGEN"</strong>, which system do you override?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                   <label class="cursor-pointer group">
+                     <input type="radio" name="q2" value="electrical" class="quiz-radio sr-only">
+                     <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-sm group-hover:border-cyan-500/50 transition-all">ELECTRICAL (BLUE)</div>
+                   </label>
+                   <label class="cursor-pointer group">
+                     <input type="radio" name="q2" value="oxygen" class="quiz-radio sr-only">
+                     <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-sm group-hover:border-cyan-500/50 transition-all">LIFE SUPPORT (O2)</div>
+                   </label>
+                   <label class="cursor-pointer group">
+                     <input type="radio" name="q2" value="propulsion" class="quiz-radio sr-only">
+                     <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-sm group-hover:border-cyan-500/50 transition-all">PROPULSION</div>
+                   </label>
+                </div>
+             </div>
+
+             <!-- Q3: Spatial Orientation -->
+             <div class="pt-6 border-t border-[#1a201a]">
+                <h3 class="text-sm font-heavy text-gray-300 tracking-wide mb-2">3. SPATIAL ORIENTATION</h3>
+                <p class="text-sm text-gray-400 mb-4 bg-[#0a0b0a] p-3 border-l-2 border-[#232a23]">If the Destiny module is pitched 90 degrees starboard, is the Node 2 hatch <strong class="text-white">ABOVE</strong> or <strong class="text-white">BELOW</strong> your current forward vector?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                   <label class="cursor-pointer group">
+                     <input type="radio" name="q3" value="above" class="quiz-radio sr-only">
+                     <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-sm group-hover:border-cyan-500/50 transition-all">ABOVE</div>
+                   </label>
+                   <label class="cursor-pointer group">
+                     <input type="radio" name="q3" value="below" class="quiz-radio sr-only">
+                     <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-sm group-hover:border-cyan-500/50 transition-all">BELOW</div>
+                   </label>
+                </div>
+             </div>
+
+           </div>
+
+           <!-- Submit Action -->
+           <div class="pt-8 border-t border-[#232a23] mt-8">
+             <button onclick="runDiagnostic()" class="w-full py-4 btn-heavy bg-cyan-500 hover:bg-cyan-400 text-black text-xl tracking-widest transition-colors shadow-[0_0_20px_rgba(6,182,212,0.3)]">
+               SUBMIT ASSESSMENT
+             </button>
+           </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Diagnostic Results Modal -->
+  <div id="results-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md bg-black/80 opacity-0 pointer-events-none transition-opacity duration-300">
+     <div id="results-card" class="panel-armor p-6 md:p-8 max-w-2xl w-full relative transition-colors duration-500">
+        
+        <button onclick="closeDiagnostic()" class="absolute top-4 right-4 text-gray-500 hover:text-white">
+           <svg class="lucide w-6 h-6" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+
+        <h2 class="text-2xl font-heavy text-gray-200 tracking-wider mb-2">NEUROCOGNITIVE DIAGNOSIS</h2>
+        
+        <!-- Dynamic Result Banner -->
+        <div id="result-banner" class="flex items-start gap-4 p-5 mb-6 border transition-colors mt-6">
+           <svg id="result-icon" class="lucide w-8 h-8 shrink-0 mt-0.5" viewBox="0 0 24 24">
+             <!-- Injected via JS -->
+           </svg>
+           <div>
+             <h3 id="result-title" class="font-heavy text-xl tracking-widest mb-2 transition-colors">STATUS: PENDING</h3>
+             <p id="result-desc" class="font-tech text-gray-300 leading-relaxed text-sm">Processing telemetry...</p>
+           </div>
+        </div>
+
+        <div class="pt-6 border-t border-[#232a23] flex flex-col sm:flex-row gap-4">
+           <button class="flex-1 py-3 px-4 btn-heavy bg-[#232a23] text-gray-300 border border-[#4a544a] hover:bg-[#333e33] font-heavy text-sm tracking-widest transition-colors flex justify-center items-center gap-2" onclick="closeDiagnostic()">
+              ACKNOWLEDGE
+           </button>
+        </div>
+     </div>
+  </div>
+
+  <script>
+    // Q1 Memory Sequence Logic
+    let sequenceTimer = null;
+    function showSequence() {
+      const display = document.getElementById('seq-display');
+      const btn = document.getElementById('btn-show-seq');
+      
+      if (sequenceTimer) return; // Prevent multiple clicks
+      
+      btn.classList.add('opacity-50', 'pointer-events-none');
+      display.classList.replace('text-gray-600', 'text-white');
+      display.innerText = "8-2-0-4-9-1";
+      
+      sequenceTimer = setTimeout(() => {
+        display.classList.replace('text-white', 'text-gray-600');
+        display.innerText = "[ HIDDEN ]";
+        btn.classList.remove('opacity-50', 'pointer-events-none');
+        sequenceTimer = null;
+      }, 3000); // Hide after 3 seconds
+    }
+
+    // Diagnostic Engine
+    const modal = document.getElementById('results-modal');
+    
+    const outcomes = {
+      nominal: {
+        title: "RESULT 1: NOMINAL / FLIGHT READY",
+        desc: "Nominal Cognition. SANS negative. Cleared for Extravehicular Activity (EVA) and critical robotic arm operations.",
+        cardBorder: "border-[#76ff03]/50",
+        bannerBg: "bg-green-950/30 border-[#76ff03]",
+        textColor: "text-[#76ff03] shadow-[0_0_10px_#76ff03]",
+        iconHtml: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>'
+      },
+      fatigue: {
+        title: "RESULT 2: SUB-NOMINAL (FATIGUE)",
+        desc: "Minor Cognitive Fatigue detected. Reaction times delayed or psychological stress elevated. Recommended: 8 hours uninterrupted sleep cycle. Restricted from EVA.",
+        cardBorder: "border-yellow-600",
+        bannerBg: "bg-yellow-950/40 border-yellow-500",
+        textColor: "text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]",
+        iconHtml: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>'
+      },
+      sans: {
+        title: "RESULT 3: SANS INDICATOR ALARM",
+        desc: "Cognition is Nominal, but multiple Spaceflight Associated Neuro-ocular Syndrome (SANS) symptoms detected. Initiate ocular ultrasound and transmit scans to Houston Flight Surgeon immediately.",
+        cardBorder: "border-orange-600",
+        bannerBg: "bg-orange-950/40 border-orange-500",
+        textColor: "text-orange-500 drop-shadow-[0_0_5px_rgba(249,115,22,0.8)]",
+        iconHtml: '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>'
+      },
+      critical: {
+        title: "RESULT 4: CRITICAL IMPAIRMENT",
+        desc: "Critical Cognitive Degradation & High Stress levels breached. Stand down from all mission-critical operations immediately. Initiate Private Medical Conference (PMC).",
+        cardBorder: "border-red-600",
+        bannerBg: "bg-red-950/50 border-red-500 shadow-[inset_0_0_15px_rgba(255,0,0,0.3)]",
+        textColor: "text-red-500 drop-shadow-[0_0_5px_rgba(255,0,0,0.8)]",
+        iconHtml: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'
+      }
+    };
+
+    function runDiagnostic() {
+      // Collect Values
+      const fatigue = parseInt(document.getElementById('val-fatigue').value);
+      const stress = parseInt(document.getElementById('val-stress').value);
+      
+      let sansScore = 0;
+      for(let i=1; i<=4; i++) {
+        if(document.getElementById('sans-'+i).checked) sansScore++;
+      }
+
+      let quizScore = 0;
+      const q1 = document.getElementById('quiz-1').value.replace(/[^0-9]/g, ''); // strip non-digits
+      if (q1 === "820491") quizScore++;
+      
+      const q2 = document.querySelector('input[name="q2"]:checked');
+      if (q2 && q2.value === "oxygen") quizScore++;
+      
+      const q3 = document.querySelector('input[name="q3"]:checked');
+      if (q3 && q3.value === "above") quizScore++;
+
+      // Evaluate Logic
+      let result = 'nominal';
+      
+      if (fatigue >= 8 && stress >= 8 || quizScore <= 1) {
+        result = 'critical';
+      } else if (sansScore >= 2) {
+        result = 'sans';
+      } else if (fatigue >= 6 || stress >= 6 || quizScore === 2) {
+        result = 'fatigue';
+      }
+
+      // Inject Result Data
+      const data = outcomes[result];
+      
+      document.getElementById('results-card').className = `panel-armor p-6 md:p-8 max-w-2xl w-full relative transition-colors duration-500 ${data.cardBorder}`;
+      
+      const banner = document.getElementById('result-banner');
+      banner.className = `flex items-start gap-4 p-5 mb-6 border transition-colors mt-6 ${data.bannerBg}`;
+      
+      const icon = document.getElementById('result-icon');
+      icon.innerHTML = data.iconHtml;
+      icon.className = `lucide w-8 h-8 shrink-0 mt-0.5 animate-pulse ${data.textColor}`;
+      
+      const title = document.getElementById('result-title');
+      title.innerText = data.title;
+      title.className = `font-heavy text-xl tracking-widest mb-2 transition-colors ${data.textColor}`;
+      
+      document.getElementById('result-desc').innerText = data.desc;
+
+      // Show Modal
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function closeDiagnostic() {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+  </script>
+</body>
+</html>

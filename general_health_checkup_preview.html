@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Reuse previous styles */
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Share+Tech+Mono&display=swap');
+    
+    .font-heavy { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
+    .font-tech { font-family: 'Share Tech Mono', monospace; }
+    
+    .bg-grunge {
+      background-color: #050605;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(30, 40, 30, 0.3) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.4) 2px, rgba(0,0,0,0.4) 4px);
+      color: #9ca3af;
+    }
+    
+    .text-neon-green { color: #76ff03; text-shadow: 0 0 10px rgba(118, 255, 3, 0.5); }
+    .text-gold { color: #ffb700; text-shadow: 0 0 10px rgba(255, 183, 0, 0.4); }
+    .text-alert { color: #ff3333; text-shadow: 0 0 10px rgba(255, 51, 51, 0.6); }
+
+    .panel-armor {
+      background: linear-gradient(135deg, #161816 0%, #0a0b0a 100%);
+      border: 2px solid #232a23;
+      clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+      position: relative;
+    }
+
+    .panel-armor-critical {
+      background: linear-gradient(135deg, #2a0808 0%, #100202 100%);
+      border: 2px solid #6e1010;
+      clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+      box-shadow: inset 0 0 40px rgba(255, 0, 0, 0.2);
+    }
+    
+    .btn-heavy {
+      clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+      font-family: 'Oswald', sans-serif; text-transform: uppercase;
+    }
+    
+    input[type=number], input[type=text] {
+      background: #0a0b0a; border: 1px solid #232a23; color: #76ff03; font-family: 'Share Tech Mono', monospace;
+      padding: 0.5rem; outline: none; width: 100%;
+    }
+    input[type=number]:focus, input[type=text]:focus { border-color: #76ff03; }
+    
+    svg.lucide { stroke-width: 2; fill: none; stroke: currentColor; }
+  </style>
+</head>
+<body class="bg-grunge text-gray-300 font-tech p-4 md:p-6 lg:p-8 min-h-screen flex flex-col gap-6">
+
+  <!-- Header -->
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b-2 border-[#232a23]">
+    <div>
+      <h1 class="text-4xl font-heavy text-gold tracking-widest">GENERAL HEALTH CHECKUP</h1>
+      <p class="text-sm text-gray-400 mt-1">Standalone Auxiliary Medical Module</p>
+    </div>
+    <div class="mt-4 md:mt-0">
+       <button class="btn-heavy bg-[#232a23] text-gray-300 px-6 py-2 border border-[#4a544a] hover:bg-[#333e33]" onclick="window.location.href='index.html'">
+          RETURN TO MAIN DASHBOARD
+       </button>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    
+    <!-- Left Column (Span 8) -->
+    <div class="lg:col-span-8 space-y-6">
+      
+      <!-- 1. Vitals & Microgravity Nutrition -->
+      <section class="panel-armor p-6 transition-colors duration-500" id="vitals-panel">
+        <h2 class="text-xl font-heavy text-gray-300 mb-4 flex items-center gap-2 border-b border-[#232a23] pb-2">
+          VITALS & MICROGRAVITY NUTRITION
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <div>
+              <label class="text-xs font-bold text-gray-400 uppercase mb-1 block">Weight (kg)</label>
+              <input type="number" id="input-weight" value="75" oninput="calculateBMI()" />
+            </div>
+            <div>
+              <label class="text-xs font-bold text-gray-400 uppercase mb-1 block">Height (cm)</label>
+              <input type="number" id="input-height" value="180" oninput="calculateBMI()" />
+            </div>
+            <div class="flex items-center gap-4 mt-2 bg-black/30 p-3 border border-[#232a23]">
+              <div class="text-2xl font-heavy tracking-wider">BMI: <span id="bmi-value" class="text-neon-green transition-colors">23.1</span></div>
+              <div id="health-indicator" class="ml-auto transition-transform">
+                 <!-- JS will inject Thumbs Up/Down SVG -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-black/50 p-4 border border-[#232a23] flex flex-col justify-center">
+             <h3 class="font-heavy text-sm text-gold mb-2 flex items-center gap-2">
+               <svg class="lucide w-4 h-4" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> 
+               DIETARY & SLEEP DIRECTIVE
+             </h3>
+             <p id="diet-recommendation" class="text-sm text-gray-400 leading-relaxed transition-colors">
+               Optimal mass maintained. Standard caloric intake. Zero-G sleep schedule nominal.
+             </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Space Medicine & Dynamic Triage -->
+      <section id="medicine-panel" class="panel-armor p-6 transition-colors duration-500">
+        <h2 class="text-xl font-heavy text-gray-300 mb-4 flex items-center gap-2 border-b border-[#232a23] pb-2">
+          SPACE MEDICINE & DYNAMIC TRIAGE
+        </h2>
+        
+        <div id="medicine-standard">
+          <input type="text" id="med-search" placeholder="Search treatments (e.g., Radiation, SAS)..." onkeyup="filterMedicine()" class="mb-4" />
+          <div class="space-y-2 h-48 overflow-y-auto pr-2" id="med-list">
+            <div class="med-item bg-black/40 p-3 border border-[#232a23]">
+              <h4 class="font-heavy text-neon-green text-sm">SPACE ADAPTATION SYNDROME (SAS)</h4>
+              <p class="text-xs text-gray-400 mt-1">Administer Promethazine 25mg IM. Restrict head movements. Apply cold compress to posterior neck.</p>
+            </div>
+            <div class="med-item bg-black/40 p-3 border border-[#232a23]">
+              <h4 class="font-heavy text-neon-green text-sm">ACUTE RADIATION SYNDROME</h4>
+              <p class="text-xs text-gray-400 mt-1">Administer Neupogen 300mcg SubQ. Isolate in shielded bunker. Intravenous fluid replacement.</p>
+            </div>
+            <div class="med-item bg-black/40 p-3 border border-[#232a23]">
+              <h4 class="font-heavy text-neon-green text-sm">MICROGRAVITY BONE LOSS</h4>
+              <p class="text-xs text-gray-400 mt-1">Increase resistive exercise by 20%. Bisphosphonate protocol initiation pending CMO approval.</p>
+            </div>
+            <div class="med-item bg-black/40 p-3 border border-[#232a23]">
+              <h4 class="font-heavy text-neon-green text-sm">CO2 TOXICITY (HYPERCAPNIA)</h4>
+              <p class="text-xs text-gray-400 mt-1">Administer 100% O2 via mask. Move to well-ventilated node. Monitor for persistent headache or confusion.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="medicine-emergency" class="hidden">
+           <div class="p-4 bg-red-950/50 border border-red-700 text-red-200">
+              <strong class="block text-red-500 mb-2 font-heavy text-2xl tracking-wider animate-pulse">EMERGENCY TRIAGE OVERRIDE</strong>
+              <p class="text-sm">Critical physical degradation detected. Standard diagnostic search disabled.</p>
+              <ul class="list-disc list-inside mt-3 space-y-2 text-red-300 text-sm bg-black/30 p-3 border border-red-900/50">
+                <li><strong class="text-white">IMMEDIATE STABILIZATION REQUIRED.</strong></li>
+                <li>Administer intravenous nutrients and hydration.</li>
+                <li>Suspend all EVA and strenuous activities immediately.</li>
+                <li>Initiate emergency medical telemetry downlink to Houston.</li>
+              </ul>
+           </div>
+        </div>
+      </section>
+
+      <!-- 4. Simulated Telemetry & Geofencing Panel -->
+      <section class="panel-armor p-6">
+        <h2 class="text-xl font-heavy text-gray-300 mb-4 flex items-center gap-2 border-b border-[#232a23] pb-2">
+          TELEMETRY & GEOFENCING (EVA TRACKER)
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Optical Biosensors Chart -->
+          <div class="bg-black/50 border border-[#232a23] p-4 flex flex-col relative overflow-hidden">
+             <h3 class="font-heavy text-xs text-gray-400 mb-2 z-10">OPTICAL BIOSENSORS (SPR DATA)</h3>
+             <canvas id="biosensor-chart" class="w-full h-32 z-10"></canvas>
+             <div class="absolute inset-0 bg-gradient-to-t from-[#00e5ff]/5 to-transparent pointer-events-none"></div>
+          </div>
+
+          <!-- EVA Tracker -->
+          <div class="bg-black/50 border border-[#232a23] p-4 flex flex-col justify-center relative overflow-hidden">
+             <div id="geofence-warning" class="hidden absolute inset-0 bg-red-900/90 z-20 flex flex-col items-center justify-center border-2 border-red-500 animate-pulse">
+                <svg class="lucide w-8 h-8 text-white mb-2" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                <h3 class="font-heavy text-xl text-white tracking-widest text-center">RETURN TO BASE</h3>
+                <p class="text-xs text-red-200 mt-1 font-bold">DISTANCE EXCEEDS O2 RESERVES</p>
+             </div>
+             
+             <div class="relative z-10">
+                 <div class="flex justify-between text-xs font-bold text-gray-400 mb-1 uppercase">
+                   <span>EVA Distance from Airlock</span>
+                   <span id="eva-dist-val" class="text-neon-green font-heavy text-sm">50m</span>
+                 </div>
+                 <input type="range" id="eva-slider" min="0" max="500" value="50" oninput="updateGeofence()" class="w-full accent-[#76ff03] bg-[#1a201a] h-2 appearance-none cursor-pointer" />
+                 
+                 <div class="flex justify-between text-xs font-bold text-gray-400 mb-1 uppercase mt-6">
+                   <span>Suit O2 Remaining</span>
+                   <span id="eva-o2-val" class="text-blue-400 font-heavy text-sm">80%</span>
+                 </div>
+                 <input type="range" id="o2-slider" min="1" max="100" value="80" oninput="updateGeofence()" class="w-full accent-blue-500 bg-[#1a201a] h-2 appearance-none cursor-pointer" />
+             </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Right Column (Span 4) -->
+    <div class="lg:col-span-4 space-y-6">
+      
+      <!-- 5. Crew Roster Sorting -->
+      <section class="panel-armor p-6 sticky top-6">
+        <h2 class="text-xl font-heavy text-gray-300 mb-4 flex items-center gap-2 border-b border-[#232a23] pb-2">
+          CREW ROSTER (TRIAGE PRIORITY)
+        </h2>
+        <div id="crew-roster" class="space-y-3 relative">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- 3. Psychological & Isolation Tracker -->
+      <section class="panel-armor p-6">
+        <h2 class="text-xl font-heavy text-gray-300 mb-4 flex items-center gap-2 border-b border-[#232a23] pb-2">
+          PSYCHOLOGICAL TRACKER
+        </h2>
+        
+        <div class="space-y-6">
+          <div>
+            <div class="flex justify-between text-xs font-bold text-gray-400 mb-2 uppercase">
+              <span>Daily Mood</span>
+              <span id="psych-mood-val" class="text-gold font-heavy text-sm">7 / 10</span>
+            </div>
+            <input type="range" min="1" max="10" value="7" oninput="document.getElementById('psych-mood-val').innerText = this.value + ' / 10'" class="w-full accent-[#ffb700] bg-[#1a201a] h-2 appearance-none cursor-pointer" />
+            <div class="flex justify-between text-[10px] text-gray-500 mt-1 uppercase">
+              <span>Depressed</span><span>Optimal</span>
+            </div>
+          </div>
+          
+          <div>
+            <div class="flex justify-between text-xs font-bold text-gray-400 mb-2 uppercase">
+              <span>Isolation Stress</span>
+              <span id="psych-stress-val" class="text-red-400 font-heavy text-sm">4 / 10</span>
+            </div>
+            <input type="range" min="1" max="10" value="4" oninput="document.getElementById('psych-stress-val').innerText = this.value + ' / 10'" class="w-full accent-red-500 bg-[#1a201a] h-2 appearance-none cursor-pointer" />
+            <div class="flex justify-between text-[10px] text-gray-500 mt-1 uppercase">
+              <span>Calm</span><span>Severe</span>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-[#232a23]">
+             <button class="w-full py-3 btn-heavy bg-[#0a0b0a] text-gray-300 border border-[#232a23] hover:border-[#76ff03] hover:text-[#76ff03] transition-colors flex items-center justify-center gap-2 shadow-inner shadow-[#76ff03]/0 hover:shadow-[#76ff03]/10">
+                <svg class="lucide w-5 h-5" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                COGNITIVE READINESS TEST
+             </button>
+             <p class="text-[10px] text-gray-500 text-center mt-2 uppercase tracking-wide">Required every 72 hours to assess mission-critical problem solving</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    // 1. Vitals & Nutrition Logic
+    const svgThumbsUp = '<svg class="lucide w-8 h-8 text-neon-green drop-shadow-[0_0_8px_rgba(118,255,3,0.6)]" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>';
+    const svgThumbsDown = '<svg class="lucide w-8 h-8 text-red-500 drop-shadow-[0_0_8px_rgba(255,0,0,0.6)]" viewBox="0 0 24 24"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22h0a3.13 3.13 0 0 1-3-3.88Z"/></svg>';
+
+    function calculateBMI() {
+      const w = parseFloat(document.getElementById('input-weight').value);
+      const h = parseFloat(document.getElementById('input-height').value) / 100;
+      if (!w || !h) return;
+      const bmi = (w / (h * h)).toFixed(1);
+      document.getElementById('bmi-value').innerText = bmi;
+
+      // Considering space context, dropping below 18.5 is critical (muscle/bone loss),
+      // going above 27 is also suboptimal.
+      const isCritical = bmi < 18.5 || bmi > 27.0;
+      
+      document.getElementById('health-indicator').innerHTML = isCritical ? svgThumbsDown : svgThumbsUp;
+      document.getElementById('bmi-value').className = isCritical ? 'text-red-500 transition-colors' : 'text-neon-green transition-colors';
+      document.getElementById('vitals-panel').className = isCritical ? 'panel-armor-critical p-6 transition-colors duration-500' : 'panel-armor p-6 transition-colors duration-500';
+
+      const dietText = document.getElementById('diet-recommendation');
+      if (isCritical) {
+        if (bmi < 18.5) {
+          dietText.innerText = 'CRITICAL: Severe mass loss detected. Increase caloric intake by 800kcal/day. High priority Calcium/Vitamin D intervention required. Halt exhaustive EVA.';
+          dietText.className = 'text-sm text-red-400 font-bold leading-relaxed transition-colors';
+        } else {
+          dietText.innerText = 'CRITICAL: Mass exceeds optimal mission parameters. Adjust caloric intake and increase cardiovascular routine on ARED device.';
+          dietText.className = 'text-sm text-red-400 font-bold leading-relaxed transition-colors';
+        }
+        
+        // Trigger Emergency Triage
+        document.getElementById('medicine-standard').classList.add('hidden');
+        document.getElementById('medicine-emergency').classList.remove('hidden');
+        document.getElementById('medicine-panel').className = 'panel-armor-critical p-6 transition-colors duration-500';
+      } else {
+        dietText.innerText = 'Optimal mass maintained. Standard caloric intake. Zero-G sleep schedule nominal.';
+        dietText.className = 'text-sm text-gray-400 leading-relaxed transition-colors';
+        
+        // Restore Standard Medicine
+        document.getElementById('medicine-standard').classList.remove('hidden');
+        document.getElementById('medicine-emergency').classList.add('hidden');
+        document.getElementById('medicine-panel').className = 'panel-armor p-6 transition-colors duration-500';
+      }
+    }
+
+    // 2. Space Medicine Search
+    function filterMedicine() {
+      const q = document.getElementById('med-search').value.toLowerCase();
+      const items = document.querySelectorAll('.med-item');
+      items.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        item.style.display = text.includes(q) ? 'block' : 'none';
+      });
+    }
+
+    // 4. Geofencing & Biosensors
+    function updateGeofence() {
+      const dist = parseInt(document.getElementById('eva-slider').value);
+      const o2 = parseInt(document.getElementById('o2-slider').value);
+      
+      document.getElementById('eva-dist-val').innerText = dist + 'm';
+      document.getElementById('eva-o2-val').innerText = o2 + '%';
+
+      // Rule: max safe distance is roughly O2 * 4 (e.g. 50% O2 = 200m)
+      const maxSafe = o2 * 4;
+      const warning = document.getElementById('geofence-warning');
+      
+      if (dist > maxSafe) {
+        warning.classList.remove('hidden');
+      } else {
+        warning.classList.add('hidden');
+      }
+    }
+
+    // Render Biosensor Chart (Canvas)
+    let animationId;
+    function renderBiosensor() {
+      const canvas = document.getElementById('biosensor-chart');
+      if(!canvas) return;
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      
+      let t = Date.now() / 400; // Speed of scroll
+      
+      function draw() {
+        ctx.clearRect(0,0,w,h);
+        
+        // Grid lines
+        ctx.strokeStyle = 'rgba(0, 229, 255, 0.1)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for(let y=0; y<h; y+=20) { ctx.moveTo(0,y); ctx.lineTo(w,y); }
+        for(let x=0; x<w; x+=20) { ctx.moveTo(x,0); ctx.lineTo(x,h); }
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#00e5ff'; // Cyan
+        ctx.lineWidth = 2;
+        
+        // Generate simulated biomarker wave
+        for(let i=0; i<=100; i++) {
+          const x = i * (w/100);
+          // Complex wave combination
+          const yOffset = Math.sin(t + i*0.1) * 15 + Math.cos(t*1.5 + i*0.2) * 8 + Math.sin(t*0.5 + i*0.05) * 5;
+          const y = (h/2) + yOffset;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        
+        t += 0.05;
+        animationId = requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    // 5. Crew Roster Sorting
+    const crew = [
+      { name: 'Cmdr. S. Mitchell', role: 'Commander', health: 92 },
+      { name: 'Dr. A. Vance', role: 'Chief Medical Officer', health: 88 },
+      { name: 'Eng. K. Thorne', role: 'Flight Engineer', health: 45 },
+      { name: 'Spec. J. Carver', role: 'Mission Specialist', health: 76 }
+    ];
+
+    function renderRoster() {
+      // Sort ascending by health (lowest first) so most critical is at the top
+      const sorted = [...crew].sort((a, b) => a.health - b.health);
+      const container = document.getElementById('crew-roster');
+      container.innerHTML = '';
+      
+      sorted.forEach(c => {
+        const isCrit = c.health < 50;
+        const colorClass = isCrit ? 'text-red-500 drop-shadow-[0_0_5px_rgba(255,0,0,0.5)]' : (c.health < 80 ? 'text-gold' : 'text-neon-green');
+        const bgClass = isCrit ? 'bg-red-950/40 border-red-900/80 shadow-[inset_0_0_10px_rgba(255,0,0,0.2)]' : 'bg-black/40 border-[#232a23]';
+        
+        container.innerHTML += `
+          <div class="flex items-center justify-between p-3 border ${bgClass} transition-all duration-300 transform hover:translate-x-1">
+             <div>
+                <div class="font-heavy text-gray-300 text-sm">${c.name}</div>
+                <div class="font-tech text-xs text-gray-500">${c.role}</div>
+             </div>
+             <div class="flex items-center gap-2">
+                <span class="font-heavy ${colorClass} text-lg">${c.health}%</span>
+                ${isCrit ? '<svg class="lucide w-4 h-4 text-red-500 animate-pulse" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>' : ''}
+             </div>
+          </div>
+        `;
+      });
+    }
+
+    // Init
+    calculateBMI();
+    updateGeofence();
+    renderBiosensor();
+    renderRoster();
+  </script>
+</body>
+</html>

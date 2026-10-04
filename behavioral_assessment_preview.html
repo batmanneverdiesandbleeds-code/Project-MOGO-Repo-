@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Global Styles & Branding */
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Share+Tech+Mono&display=swap');
+    
+    .font-heavy { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
+    .font-tech { font-family: 'Share Tech Mono', monospace; }
+    
+    .bg-grunge {
+      background-color: #050605;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(30, 40, 30, 0.3) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.4) 2px, rgba(0,0,0,0.4) 4px);
+      color: #9ca3af;
+    }
+    
+    .text-neon-green { color: #76ff03; text-shadow: 0 0 10px rgba(118, 255, 3, 0.5); }
+    .text-gold { color: #ffb700; text-shadow: 0 0 10px rgba(255, 183, 0, 0.4); }
+
+    .diamond-icon {
+      width: 14px; height: 14px; background-color: #76ff03;
+      transform: rotate(45deg); display: inline-block;
+      box-shadow: 0 0 10px #76ff03;
+    }
+
+    /* Glassmorphism adaptation of panel-armor */
+    .glass-armor {
+      background: linear-gradient(135deg, rgba(22, 24, 22, 0.75) 0%, rgba(10, 11, 10, 0.85) 100%);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(118, 255, 3, 0.2);
+      clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.6), 0 10px 30px rgba(0,0,0,0.8);
+      position: relative;
+    }
+    
+    .btn-heavy {
+      clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+      font-family: 'Oswald', sans-serif; text-transform: uppercase;
+    }
+    
+    /* Radio scale custom styles */
+    .scale-radio:checked + div {
+      background-color: #76ff03;
+      color: #000;
+      border-color: #76ff03;
+      box-shadow: 0 0 15px rgba(118, 255, 3, 0.5);
+    }
+    .scale-radio:focus + div {
+      outline: 2px solid #ffb700;
+    }
+    
+    svg.lucide { stroke-width: 2; fill: none; stroke: currentColor; }
+  </style>
+</head>
+<body class="bg-grunge text-gray-300 font-tech p-4 md:p-6 lg:p-8 min-h-screen relative overflow-x-hidden">
+
+  <!-- Header -->
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b-2 border-[#232a23] mb-8">
+    <div>
+      <div class="flex items-center gap-3 mb-1">
+        <div class="diamond-icon"></div>
+        <h1 class="text-4xl font-heavy text-neon-green tracking-widest">BEHAVIORAL ASSESSMENT</h1>
+      </div>
+      <p class="text-sm text-gray-400 mt-1">BHP - Behavioral Health & Performance Diagnostic Tool</p>
+    </div>
+    <div class="mt-4 md:mt-0">
+       <button class="btn-heavy bg-[#232a23] text-gray-300 px-6 py-2 border border-[#4a544a] hover:bg-[#333e33] transition-colors" onclick="window.location.href='index.html'">
+          RETURN TO MAIN DASHBOARD
+       </button>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto w-full z-10 relative">
+     
+     <div class="glass-armor p-6 md:p-10 border-[#4a544a]">
+        <div class="flex items-center gap-3 border-b border-[#232a23] pb-4 mb-8">
+           <svg class="lucide w-8 h-8 text-gold" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+           <h2 class="text-2xl font-heavy text-gray-200 tracking-wider">BHP DIAGNOSTIC & COGNITIVE ASSESSMENT</h2>
+        </div>
+
+        <form id="assessment-form" onsubmit="event.preventDefault(); runDiagnostic();" class="space-y-10">
+           
+           <!-- Question 1 -->
+           <div class="space-y-3">
+             <label class="text-base text-gray-300 font-bold tracking-wide">1. How would you rate the friction between your crew and ground support (Houston) over the last 72 hours?</label>
+             <div class="flex justify-between text-xs text-gray-500 uppercase mb-1">
+                <span>1 - Nominal/None</span>
+                <span>5 - Severe/Disruptive</span>
+             </div>
+             <div class="flex gap-2">
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q1" value="1" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">1</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q1" value="2" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">2</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q1" value="3" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">3</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q1" value="4" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">4</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q1" value="5" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">5</div>
+                 </label>
+             </div>
+           </div>
+
+           <!-- Question 2 -->
+           <div class="space-y-3">
+             <label class="text-base text-gray-300 font-bold tracking-wide">2. Have you experienced vestibular mismatch (space sickness) impacting your focus today?</label>
+             <div class="flex justify-between text-xs text-gray-500 uppercase mb-1">
+                <span>1 - Not at all</span>
+                <span>5 - Debilitating</span>
+             </div>
+             <div class="flex gap-2">
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q2" value="1" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">1</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q2" value="2" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">2</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q2" value="3" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">3</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q2" value="4" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">4</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q2" value="5" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">5</div>
+                 </label>
+             </div>
+           </div>
+
+           <!-- Question 3 -->
+           <div class="space-y-3">
+             <label class="text-base text-gray-300 font-bold tracking-wide">3. Rate your perceived level of isolation or mission fatigue.</label>
+             <div class="flex justify-between text-xs text-gray-500 uppercase mb-1">
+                <span>1 - Optimal/Engaged</span>
+                <span>5 - High Fatigue/Detached</span>
+             </div>
+             <div class="flex gap-2">
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q3" value="1" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">1</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q3" value="2" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">2</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q3" value="3" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">3</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q3" value="4" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">4</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q3" value="5" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">5</div>
+                 </label>
+             </div>
+           </div>
+
+           <!-- Question 4 -->
+           <div class="space-y-3">
+             <label class="text-base text-gray-300 font-bold tracking-wide">4. How many hours of continuous sleep did you achieve without CO2 ventilation interruption?</label>
+             <div class="flex justify-between text-xs text-gray-500 uppercase mb-1">
+                <span>1 - Less than 4 hours</span>
+                <span>5 - 8+ hours (Uninterrupted)</span>
+             </div>
+             <div class="flex gap-2">
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q4" value="1" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">1</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q4" value="2" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">2</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q4" value="3" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">3</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q4" value="4" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">4</div>
+                 </label>
+                 <label class="flex-1 cursor-pointer group">
+                   <input type="radio" name="q4" value="5" class="scale-radio sr-only" required>
+                   <div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">5</div>
+                 </label>
+             </div>
+           </div>
+
+           <!-- Question 5 -->
+           <div class="space-y-3 mt-8">
+             <label class="text-base text-gray-300 font-bold tracking-wide">5. Rate the frequency of minor interpersonal conflicts with crewmates over the last 48 hours.</label>
+             <div class="flex justify-between text-xs text-gray-500 uppercase mb-1">
+                <span>1 - None/Nominal</span>
+                <span>5 - Frequent/Severe</span>
+             </div>
+             <div class="flex gap-2">
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q5" value="1" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">1</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q5" value="2" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">2</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q5" value="3" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">3</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q5" value="4" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">4</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q5" value="5" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">5</div></label>
+             </div>
+           </div>
+
+           <!-- Question 6 -->
+           <div class="space-y-3 mt-8">
+             <label class="text-base text-gray-300 font-bold tracking-wide">6. Are you experiencing difficulty transitioning context between complex technical tasks?</label>
+             <div class="flex justify-between text-xs text-gray-500 uppercase mb-1">
+                <span>1 - No Difficulty</span>
+                <span>5 - Severe Brain Fog</span>
+             </div>
+             <div class="flex gap-2">
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q6" value="1" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">1</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q6" value="2" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">2</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q6" value="3" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">3</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q6" value="4" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">4</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q6" value="5" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">5</div></label>
+             </div>
+           </div>
+
+           <!-- Question 7 -->
+           <div class="space-y-3 mt-8">
+             <label class="text-base text-gray-300 font-bold tracking-wide">7. How often do you feel a sense of psychological detachment or isolation from Mission Control (Earth)?</label>
+             <div class="flex justify-between text-xs text-gray-500 uppercase mb-1">
+                <span>1 - Connected</span>
+                <span>5 - Fully Detached</span>
+             </div>
+             <div class="flex gap-2">
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q7" value="1" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">1</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q7" value="2" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">2</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q7" value="3" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">3</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q7" value="4" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">4</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q7" value="5" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">5</div></label>
+             </div>
+           </div>
+
+           <!-- Question 8 -->
+           <div class="space-y-3 mt-8">
+             <label class="text-base text-gray-300 font-bold tracking-wide">8. Have you noticed a decline in fine motor skills or spatial tracking during module maintenance?</label>
+             <div class="flex justify-between text-xs text-gray-500 uppercase mb-1">
+                <span>1 - Nominal</span>
+                <span>5 - Severe Decline</span>
+             </div>
+             <div class="flex gap-2">
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q8" value="1" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">1</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q8" value="2" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">2</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q8" value="3" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">3</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q8" value="4" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">4</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q8" value="5" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">5</div></label>
+             </div>
+           </div>
+
+           <!-- Question 9 -->
+           <div class="space-y-3 mt-8">
+             <label class="text-base text-gray-300 font-bold tracking-wide">9. Rate your current level of anxiety or unease regarding the overall mission timeline.</label>
+             <div class="flex justify-between text-xs text-gray-500 uppercase mb-1">
+                <span>1 - Calm/Confident</span>
+                <span>5 - High Anxiety</span>
+             </div>
+             <div class="flex gap-2">
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q9" value="1" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">1</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q9" value="2" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">2</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q9" value="3" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">3</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q9" value="4" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">4</div></label>
+                 <label class="flex-1 cursor-pointer group"><input type="radio" name="q9" value="5" class="scale-radio sr-only" required><div class="py-3 text-center border border-[#232a23] bg-black/50 text-gray-400 font-heavy text-lg group-hover:border-[#76ff03]/50 transition-all">5</div></label>
+             </div>
+           </div>
+
+           <!-- Submit Action -->
+           <div class="pt-6 mt-8 border-t border-[#232a23]">
+             <button type="submit" class="w-full py-4 btn-heavy bg-[#76ff03] hover:bg-[#8aff29] text-black text-xl tracking-widest transition-colors shadow-[0_0_20px_rgba(118,255,3,0.3)]">
+               RUN DIAGNOSTIC
+             </button>
+           </div>
+        </form>
+     </div>
+  </main>
+
+  <!-- Diagnostic Results Modal -->
+  <div id="results-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md bg-black/80 opacity-0 pointer-events-none transition-opacity duration-300">
+     <div class="glass-armor p-6 md:p-8 max-w-2xl w-full border-[#ffb700] shadow-[0_0_50px_rgba(0,0,0,0.5)] relative">
+        
+        <!-- Close button -->
+        <button onclick="closeDiagnostic()" class="absolute top-4 right-4 text-gray-500 hover:text-white">
+           <svg class="lucide w-6 h-6" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+
+        <h2 class="text-2xl font-heavy text-gray-200 tracking-wider mb-2">DIAGNOSTIC RESULTS</h2>
+        
+        <!-- Dynamic Status Container -->
+        <div id="status-container" class="flex items-center gap-3 p-4 bg-yellow-950/40 border border-yellow-700/50 mb-6 transition-colors">
+           <svg id="status-icon" class="lucide w-8 h-8 text-gold animate-pulse" viewBox="0 0 24 24">
+             <!-- Injected via JS -->
+           </svg>
+           <p id="status-outcome" class="text-gold font-heavy text-xl tracking-widest transition-colors">STATUS: MISSION FATIGUE / MILD STRESS</p>
+        </div>
+        
+        <h3 class="text-sm font-heavy text-gray-400 mb-3 uppercase tracking-widest">RECOMMENDED COUNTERMEASURES</h3>
+        
+        <!-- Dynamic Countermeasures List -->
+        <ul id="countermeasures-list" class="space-y-3 mb-8">
+           <!-- Injected via JS -->
+        </ul>
+
+        <!-- Reporting Actions -->
+        <div class="pt-6 border-t border-[#232a23] flex flex-col sm:flex-row gap-4">
+           <!-- Button 1: Primary Transmit -->
+           <button id="btn-transmit" onclick="transmitData()" class="flex-1 py-3 px-4 btn-heavy bg-[#76ff03] hover:bg-[#8aff29] text-black font-heavy text-sm tracking-widest transition-colors shadow-[0_0_15px_rgba(118,255,3,0.3)] flex justify-center items-center gap-2">
+              <svg class="lucide w-5 h-5" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+              <span>TRANSMIT TO HOUSTON</span>
+           </button>
+
+           <!-- Button 2: Secondary Log -->
+           <button id="btn-log" onclick="logData()" class="flex-1 py-3 px-4 btn-heavy bg-transparent border-2 border-[#76ff03] hover:bg-[#76ff03]/10 text-[#76ff03] font-heavy text-sm tracking-widest transition-colors flex justify-center items-center gap-2">
+              <svg class="lucide w-5 h-5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              <span>LOG TO ISS DATABASE</span>
+           </button>
+        </div>
+     </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('results-modal');
+    
+    // Dynamic Outcomes Configuration
+    const outcomes = {
+      nominal: {
+        status: "STATUS: OPTIMAL / NOMINAL",
+        colorClass: "text-neon-green",
+        bgClass: "bg-green-950/30 border-green-700/50",
+        iconHtml: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>',
+        bullets: [
+          "Maintain current operational tempo and mission schedule.",
+          "Continue standard resistive and aerobic physical training routine.",
+          "Dietary and sleep patterns are currently optimal."
+        ]
+      },
+      fatigue: {
+        status: "STATUS: MISSION FATIGUE / MILD STRESS",
+        colorClass: "text-gold",
+        bgClass: "bg-yellow-950/40 border-yellow-700/50",
+        iconHtml: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+        bullets: [
+          "Utilize onboard operational psychology support suite (exercise, music, movies).",
+          "Schedule a Private Psychological Conference (PPC) with the flight surgeon.",
+          "Consider a mild sleep aid if circadian disruption persists."
+        ]
+      },
+      isolation: {
+        status: "STATUS: PSYCHOLOGICAL ISOLATION / DETACHMENT",
+        colorClass: "text-purple-400",
+        bgClass: "bg-purple-950/40 border-purple-700/50",
+        iconHtml: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
+        bullets: [
+          "Mandatory video conference with family and support system on Earth.",
+          "Reassign solitary maintenance tasks to pair-based operations.",
+          "Prescribe short-term cognitive behavioral exercises (CBT-Space)."
+        ]
+      },
+      critical: {
+        status: "STATUS: CRITICAL COGNITIVE DEGRADATION",
+        colorClass: "text-red-500",
+        bgClass: "bg-red-950/50 border-red-700/80 shadow-[inset_0_0_15px_rgba(255,0,0,0.3)]",
+        iconHtml: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+        bullets: [
+          "IMMEDIATE STAND-DOWN FROM CRITICAL MISSION TASKS AND EVA PROCEEDINGS.",
+          "Initiate secure, high-priority neuro-psychiatric downlink with Houston.",
+          "Administer 100% O2 to clear potential latent CO2 toxicity masking as severe fatigue."
+        ]
+      }
+    };
+
+    function runDiagnostic() {
+      // Calculate Score based on answers
+      let score = 0;
+      let allAnswered = true;
+      
+      for (let i = 1; i <= 9; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected) {
+          let val = parseInt(selected.value);
+          // Question 4 (Sleep) is inverted: 1 is bad (<4 hrs), 5 is good (8+ hrs)
+          // We invert it so a higher total score always means worse health.
+          if (i === 4) {
+            val = 6 - val; 
+          }
+          score += val;
+        } else {
+          allAnswered = false;
+        }
+      }
+
+      if (!allAnswered) {
+        alert("Please select an answer for all questions before running the diagnostic.");
+        return;
+      }
+
+      // Determine outcome bracket (Score Range: 9 to 45)
+      let type = 'nominal';
+      if (score >= 19 && score <= 27) type = 'fatigue';
+      if (score >= 28 && score <= 36) type = 'isolation';
+      if (score > 36) type = 'critical';
+
+      // Inject dynamic data
+      const data = outcomes[type];
+      
+      const container = document.getElementById('status-container');
+      container.className = `flex items-center gap-3 p-4 mb-6 transition-colors border ${data.bgClass}`;
+      
+      const icon = document.getElementById('status-icon');
+      icon.innerHTML = data.iconHtml;
+      icon.className = `lucide w-8 h-8 animate-pulse ${data.colorClass} ${type === 'critical' ? 'drop-shadow-[0_0_5px_rgba(255,0,0,0.8)]' : ''}`;
+
+      const statusText = document.getElementById('status-outcome');
+      statusText.innerText = data.status;
+      statusText.className = `font-heavy text-xl tracking-widest transition-colors ${data.colorClass} ${type === 'critical' ? 'drop-shadow-[0_0_5px_rgba(255,0,0,0.8)]' : ''}`;
+
+      const list = document.getElementById('countermeasures-list');
+      list.innerHTML = data.bullets.map(b => `
+         <li class="flex items-start gap-3 bg-black/40 p-3 border border-[#232a23]">
+            <svg class="lucide w-5 h-5 text-neon-green shrink-0 mt-0.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+            <span class="text-sm text-gray-300 leading-relaxed">${b}</span>
+         </li>
+      `).join('');
+
+      // Show Modal
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function closeDiagnostic() {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function transmitData() {
+      const btn = document.getElementById('btn-transmit');
+      const originalHTML = btn.innerHTML;
+      
+      btn.innerHTML = `
+        <svg class="lucide w-5 h-5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+        <span>TRANSMISSION SENT</span>
+      `;
+      btn.className = "flex-1 py-3 px-4 btn-heavy bg-[#232a23] text-gray-300 font-heavy text-sm tracking-widest transition-colors flex justify-center items-center gap-2 pointer-events-none";
+      
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.className = "flex-1 py-3 px-4 btn-heavy bg-[#76ff03] hover:bg-[#8aff29] text-black font-heavy text-sm tracking-widest transition-colors shadow-[0_0_15px_rgba(118,255,3,0.3)] flex justify-center items-center gap-2";
+      }, 3000);
+    }
+
+    function logData() {
+      const btn = document.getElementById('btn-log');
+      const originalHTML = btn.innerHTML;
+      
+      btn.innerHTML = `
+        <svg class="lucide w-5 h-5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+        <span>LOGGED TO DATABASE</span>
+      `;
+      btn.className = "flex-1 py-3 px-4 btn-heavy bg-[#76ff03] text-black border-2 border-[#76ff03] font-heavy text-sm tracking-widest transition-colors flex justify-center items-center gap-2 pointer-events-none";
+      
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.className = "flex-1 py-3 px-4 btn-heavy bg-transparent border-2 border-[#76ff03] hover:bg-[#76ff03]/10 text-[#76ff03] font-heavy text-sm tracking-widest transition-colors flex justify-center items-center gap-2";
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
